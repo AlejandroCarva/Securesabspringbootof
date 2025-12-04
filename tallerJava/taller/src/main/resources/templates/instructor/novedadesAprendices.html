@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mainI}">
+<head>
+    <title layout:fragment="title">Novedades de Aprendices</title>
+    
+    <style layout:fragment="styles">
+        /* Solo estilos necesarios */
+        .badge-pendiente { background-color: #ffc107; color: #000; }
+        .badge-justificado { background-color: #198754; color: #fff; }
+        .badge-inasistio { background-color: #dc3545; color: #fff; }
+        
+        .action-form {
+            min-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <section id="novedades-aprendices-section" class="content-section" aria-labelledby="novedades-aprendices-heading">
+            <h2 id="novedades-aprendices-heading">Novedades de Aprendices</h2>
+            
+            <!-- Mensajes de alerta -->
+            <div th:if="${param.success != null}" class="alert alert-success alert-dismissible fade show" role="alert">
+                Solicitud procesada correctamente
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+            <div th:if="${param.error != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                Error al procesar la solicitud
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+            <!-- Filtros -->
+            <div class="filter-controls mb-4 p-3 bg-light rounded">
+                <form method="GET" th:action="@{/instructor/novedades-aprendices}" class="row g-3">
+                    <div class="col-md-5">
+                        <label for="novedadesFicha" class="form-label">Filtrar por Ficha:</label>
+                        <select id="novedadesFicha" name="fichaId" class="form-select">
+                            <option value="">Todas las fichas</option>
+                            <option th:each="ficha : ${fichas}"
+                                    th:value="${ficha.idFicha}"
+                                    th:text="${ficha.numeroFicha}"
+                                    th:selected="${fichaFilter != null and fichaFilter == ficha.idFicha}">
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-5">
+                        <label for="novedadesCompetencia" class="form-label">Filtrar por Competencia:</label>
+                        <select id="novedadesCompetencia" name="competenciaId" class="form-select">
+                            <option value="">Todas las competencias</option>
+                            <option th:each="competencia : ${competencias}"
+                                    th:value="${competencia.idCompetencia}"
+                                    th:text="${competencia.nombreCompetencia}"
+                                    th:selected="${competenciaFilter != null and competenciaFilter == competencia.idCompetencia}">
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-filter me-1"></i> Aplicar
+                        </button>
+                    </div>
+                </form>
+                <div class="mt-2">
+                    <a th:href="@{/instructor/novedades-aprendices}" class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-sync me-1"></i> Limpiar filtros
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Tabla de novedades -->
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Ficha</th>
+                            <th>Aprendiz</th>
+                            <th>Cédula</th>
+                            <th>Fecha Solicitud</th>
+                            <th>Fecha Inasistencia</th>
+                            <th>Competencia</th>
+                            <th>Motivo</th>
+                            <th>Evidencia</th>
+                            <th>Estado</th>
+                            <th colspan="2">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="novedad : ${novedades}">
+                            <td th:text="${novedad.get('numeroFicha')}"></td>
+                            <td th:text="${novedad.get('nombre') + ' ' + novedad.get('apellido')}"></td>
+                            <td th:text="${novedad.get('cedula')}"></td>
+                            <td>
+                                <span th:if="${novedad.get('fecha_solicitud') != null}"
+                                      th:text="${#dates.format(novedad.get('fecha_solicitud'), 'dd/MM/yyyy')}">
+                                </span>
+                                <span th:if="${novedad.get('fecha_solicitud') == null}">-</span>
+                            </td>
+                            <td>
+                                <span th:if="${novedad.get('fecha_inasistencia') != null}"
+                                      th:text="${#dates.format(novedad.get('fecha_inasistencia'), 'dd/MM/yyyy')}">
+                                </span>
+                                <span th:if="${novedad.get('fecha_inasistencia') == null}">-</span>
+                            </td>
+                            <td th:text="${novedad.get('nombre_competencia')}"></td>
+                            <td th:text="${novedad.get('motivo')}"></td>
+                            <td>
+                                <a th:if="${novedad.get('soporte') != null and not #strings.isEmpty(novedad.get('soporte'))}"
+                                   th:href="@{'/uploads/' + ${novedad.get('soporte')}}"
+                                   target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye me-1"></i> Ver
+                                </a>
+                                <span th:if="${novedad.get('soporte') == null or #strings.isEmpty(novedad.get('soporte'))}"
+                                      class="text-muted">Sin evidencia</span>
+                            </td>
+                            <td>
+                                <span th:if="${novedad.get('estado_justificacion') == 'Pendiente'}"
+                                      class="badge badge-pendiente">Pendiente</span>
+                                <span th:if="${novedad.get('estado_asistencia') == 'Justificado'}"
+                                      class="badge badge-justificado">Justificado</span>
+                                <span th:if="${novedad.get('estado_asistencia') != 'Justificado' and novedad.get('estado_justificacion') != 'Pendiente'}"
+                                      class="badge badge-inasistio">Inasistió</span>
+                            </td>
+                            <td class="action-form">
+                                <form method="POST" th:action="@{/instructor/procesar-novedad}" 
+                                      class="d-flex align-items-center">
+                                    <input type="hidden" name="idJustificacion" th:value="${novedad.get('id_justificacion')}">
+                                    <input type="hidden" name="idAsistenciaAmbiente" th:value="${novedad.get('id_asistencia_ambiente')}">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                    
+                                    <select name="accion" class="form-select form-select-sm me-2" required 
+                                            style="min-width: 120px;">
+                                        <option value="">Acción...</option>
+                                        <option value="Aceptar">✓ Aceptar</option>
+                                        <option value="Rechazar">✗ Rechazar</option>
+                                    </select>
+                            </td>
+                            <td>
+                                <div class="d-flex">
+                                    <input type="text" name="observaciones" 
+                                           class="form-control form-control-sm me-2" 
+                                           placeholder="Observaciones"
+                                           style="min-width: 150px;">
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                                </form>
+                            </td>
+                        </tr>
+                        
+                        <tr th:if="${#lists.isEmpty(novedades)}">
+                            <td colspan="11" class="text-center py-5">
+                                <div class="text-muted">
+                                    <i class="fas fa-check-circle fa-2x mb-3"></i>
+                                    <h5>¡Excelente!</h5>
+                                    <p>No hay novedades pendientes de revisión.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

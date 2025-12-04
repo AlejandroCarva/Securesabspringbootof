@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mainI}">  <!-- ✅ ESTA ES LA CLAVE: usar mainI -->
+<head>
+    <title layout:fragment="title">Gestionar Asistencias</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <section id="gestionar-asistencias-section" class="content-section active-section" aria-labelledby="gestionar-asistencias-heading">
+            <h2 id="gestionar-asistencias-heading">Gestionar Asistencias</h2>
+
+            <div class="filtros-fichas" id="filtros-fichas">
+                <form method="GET" th:action="@{/instructor/gestionar-asistencia}">
+                    <a th:href="@{/instructor/gestionar-asistencia}">Gestión de Asistencia</a>
+                    
+                    <div th:if="${fichaSeleccionada}">
+                        <input type="hidden" name="fichaId" th:value="${fichaSeleccionada}">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="input-ficha">Ficha:</label>
+                        <input type="text" id="input-ficha" name="ficha" 
+                               th:value="${fichaFilter}" 
+                               placeholder="Ej: 2567844" aria-label="Buscar por número de ficha">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="select-jornada">Jornada:</label>
+                        <select id="select-jornada" name="jornada" aria-label="Filtrar por jornada">
+                            <option value="">Todas</option>
+                            <option th:each="jornada : ${jornadas}" 
+                                    th:value="${jornada.nombreJornada}" 
+                                    th:text="${jornada.nombreJornada}"
+                                    th:selected="${jornadaFilter != null and jornadaFilter == jornada.nombreJornada}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-buscar">Buscar</button>
+                    <a th:href="@{/instructor/gestionar-asistencia}" class="btn btn-limpiar">Limpiar</a>
+                </form>
+            </div>
+
+            <div th:if="${fichaSeleccionada != null and fichaActual != null}">
+                <div class="tabla-container" id="tabla-container">
+                    <h3>Asistencia para Ficha <span th:text="${fichaActual.numeroFicha}"></span></h3>
+
+                    <div class="filtros-tabla">
+                        <form method="GET" th:action="@{/instructor/gestionar-asistencia}">
+                            <input type="hidden" name="fichaId" th:value="${fichaSeleccionada}">
+                            <input type="hidden" name="ficha" th:value="${fichaFilter}">
+                            <input type="hidden" name="jornada" th:value="${jornadaFilter}">
+
+                            <div class="input-group">
+                                <label for="fecha-asistencia">Fecha de asistencia:</label>
+                                <input type="date" id="fecha-asistencia" name="fechaAsistencia" 
+                                       class="input-estilizado" 
+                                       th:value="${fechaAsistencia != null} ? ${#temporals.format(fechaAsistencia, 'yyyy-MM-dd')} : ${#temporals.format(#dates.createNow(), 'yyyy-MM-dd')}">
+                            </div>
+
+                            <button type="submit" class="btn btn-buscar">Actualizar fecha</button>
+                        </form>
+                    </div>
+
+                    <form method="POST" th:action="@{/instructor/guardar-asistencias}">
+                        <input type="hidden" name="_csrf" th:value="${_csrf.token}">
+                        <input type="hidden" name="fichaId" th:value="${fichaSeleccionada}">
+                        <input type="hidden" name="fechaAsistencia" 
+                               th:value="${fechaAsistencia != null} ? ${#temporals.format(fechaAsistencia, 'yyyy-MM-dd')} : ${#temporals.format(#dates.createNow(), 'yyyy-MM-dd')}">
+
+                        <table class="tabla-asistencia">
+                            <thead>
+                                <tr>
+                                    <th>Documento</th>
+                                    <th>Nombre</th>
+                                    <th>Correo</th>
+                                    <th>Asistencia</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="aprendiz : ${aprendices}">
+                                    <td th:text="${aprendiz.cedula}"></td>
+                                    <td>
+                                        <span th:text="${aprendiz.nombre}"></span> 
+                                        <span th:text="${aprendiz.apellido}"></span>
+                                    </td>
+                                    <td th:text="${aprendiz.correo}"></td>
+                                    <td>
+                                        <select th:name="'asistencia[' + ${aprendiz.idUsuario} + ']'" class="estado-asistencia">
+                                            <option value="Asistio" 
+                                                    th:selected="${asistenciasExistentes != null and asistenciasExistentes.get(aprendiz.idUsuario) == 'Asistio'}">
+                                                Asistió
+                                            </option>
+                                            <option value="Inasistio" 
+                                                    th:selected="${asistenciasExistentes != null and asistenciasExistentes.get(aprendiz.idUsuario) == 'Inasistio'}">
+                                                Inasistió
+                                            </option>
+                                            <option value="Justificado" 
+                                                    th:selected="${asistenciasExistentes != null and asistenciasExistentes.get(aprendiz.idUsuario) == 'Justificado'}">
+                                                Justificado
+                                            </option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="acciones-tabla">
+                            <button type="submit" class="btn-guardar">Guardar cambios</button>
+                            <a th:href="@{/instructor/gestionar-asistencia(ficha=${fichaFilter}, jornada=${jornadaFilter})}" 
+                               class="btn-volver">Volver a fichas</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div th:unless="${fichaSeleccionada != null and fichaActual != null}">
+                <div class="fichas-grid" id="fichas-grid">
+                    <!-- SOLUCIÓN CORREGIDA para las clases CSS -->
+                    <div th:each="ficha, iterStat : ${fichas}" 
+                         th:class="${'ficha-card '} + 
+                         ${(iterStat.index % 3 == 0) ? 'verde-oscuro' : 
+                           (iterStat.index % 2 == 0) ? 'verde-medio' : 'verde-claro'}">
+                        <div class="ficha-content">
+                            <h3>Ficha <span th:text="${ficha.numeroFicha}"></span></h3>
+                            <p><strong>Programa:</strong> <span th:text="${ficha.programa.nombrePrograma}"></span></p>
+                            <p><strong>Aprendices:</strong> 
+                                <span th:text="${ficha.aprendices != null} ? ${#lists.size(ficha.aprendices)} : 0"></span>
+                            </p>
+                            <p><strong>Jornada:</strong> <span th:text="${ficha.jornada.nombreJornada}"></span></p>
+
+                            <form method="GET" th:action="@{/instructor/asistencia-ficha/{id}(id=${ficha.idFicha})}">
+                                <button type="submit" class="btn-seleccionar">Seleccionar Ficha</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div th:if="${fichas == null or fichas.empty}" class="no-resultados">
+                        <p>No se encontraron fichas con los filtros aplicados.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

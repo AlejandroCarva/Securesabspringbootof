@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mainA}">
+<head>
+    <title layout:fragment="title">Radicar Justificación</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <section class="content-section-standard">
+            <h2>Radicar Solicitud</h2>
+
+            <!-- Mensajes flash -->
+            <div th:if="${mensaje}" 
+                 th:classappend="${tipoMensaje == 'success'} ? 'alert alert-success' : 'alert alert-danger'"
+                 th:text="${mensaje}">
+            </div>
+
+            <form th:action="@{/aprendiz/guardar-justificacion}" method="POST" enctype="multipart/form-data" th:object="${justificacion}">
+                
+                <!-- Errores de validación -->
+                <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+
+                <div class="filtros-form">
+                    <div class="filtro-group">
+                        <label for="documentoIdentidad">Documento de Identidad:</label>
+                        <input type="text" id="documentoIdentidad" th:value="${usuario.cedula}" readonly>
+                    </div>
+
+                    <div class="filtro-group">
+                        <label for="fechaSolicitud">Fecha de Solicitud:</label>
+                        <input type="date" id="fechaSolicitud" th:field="*{fechaSolicitud}" required>
+                    </div>
+
+                    <div class="filtro-group">
+                        <label for="fechaInasistencia">Fecha que Inasistió:</label>
+                        <input type="date" id="fechaInasistencia" th:field="*{fechaInasistencia}" required>
+                    </div>
+                </div>
+
+                <div class="filtro-group">
+                    <label for="descripcionSolicitud">Descripción / Motivo:</label>
+                    <select id="descripcionSolicitud" th:field="*{descripcionSolicitud}" required>
+                        <option value="">Seleccione un motivo</option>
+                        <option value="Cita Médica">Cita Médica</option>
+                        <option value="Entrevista Laboral">Entrevista Laboral</option>
+                        <option value="Diligencia Personal">Diligencia Personal</option>
+                        <option value="Fuerza Mayor">Fuerza Mayor</option>
+                        <option value="Otras">Otras (especifique)</option>
+                    </select>
+                </div>
+
+                <div class="filtro-group" id="otrasJustificacionesGroup" style="display:none;">
+                    <label for="otrasJustificaciones">Especifique su justificación:</label>
+                    <textarea id="otrasJustificaciones" th:field="*{otrasJustificaciones}" rows="4" 
+                              placeholder="Describa detalladamente su justificación..."></textarea>
+                </div>
+
+                <div class="filtro-group">
+                    <label for="competencias">Competencia:</label>
+                    <select id="competencias" name="competencias" multiple="multiple" required>
+                        <option value="">Seleccione una o más competencias</option>
+                        <th:block th:if="${competencias != null and not competencias.empty}">
+                            <option th:each="competencia : ${competencias}" 
+                                    th:value="${competencia.nombreCompetencia}" 
+                                    th:text="${competencia.nombreCompetencia}">
+                            </option>
+                        </th:block>
+                        <th:block th:if="${competencias == null or competencias.empty}">
+                            <option value="Base De Datos">Base De Datos</option>
+                            <option value="Ingeneria I">Ingeneria I</option>
+                            <option value="Arquitectura I">Arquitectura I</option>
+                            <option value="Algoritmos I">Algoritmos I</option>
+                        </th:block>
+                    </select>
+                    <small>Mantén presionada la tecla Ctrl para seleccionar múltiples opciones</small>
+                </div>
+
+                <div class="filtro-group">
+                    <label for="evidencia">Adjuntar Evidencia (Obligatorio):</label>
+                    <input type="file" id="evidencia" name="evidencia" 
+                           accept=".pdf,.doc,.docx,.jpg,.png" required>
+                    <small>Formato permitido: PDF, DOC, DOCX, JPG, PNG.</small>
+                </div>
+
+                <div class="filtro-actions">
+                    <button type="submit" class="btn primary-btn">Enviar Solicitud</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</body>
+</html>

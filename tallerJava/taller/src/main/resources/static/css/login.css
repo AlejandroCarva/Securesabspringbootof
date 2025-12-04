@@ -1,0 +1,116 @@
+/* login.css */
+
+/* Reset y base para el login */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #006400, #008000); /* Fondo degradado verde */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+    box-sizing: border-box; /* Para incluir padding en el ancho/alto */
+}
+
+.login-container {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 100%;
+    max-width: 400px; /* Ancho máximo para el formulario */
+    box-sizing: border-box;
+}
+
+.login-header {
+    margin-bottom: 30px;
+}
+
+
+
+.login-header h2 {
+    color: #000000; /* Verde oscuro */
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #555;
+}
+
+.input-group input[type="text"],
+.input-group input[type="password"],
+.input-group select { /* Añadido estilo para select */
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* Asegura que el padding no añada ancho */
+}
+
+.input-group input[type="text"]:focus,
+.input-group input[type="password"]:focus,
+.input-group select:focus { /* Añadido estilo para focus en select */
+    border-color: #006400;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 100, 0, 0.2);
+}
+
+.login-btn {
+    background-color: #006400; /* Verde oscuro */
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%; /* Botón al 100% del ancho */
+    margin-top: 10px;
+}
+
+.login-btn:hover {
+    background-color: #004d00; /* Un verde más oscuro al pasar el ratón */
+}
+
+.error-message {
+    color: #e74c3c; /* Rojo para errores */
+    margin-top: 15px;
+    font-weight: 500;
+    opacity: 0; /* Oculto por defecto */
+    transition: opacity 0.3s ease-out; /* Transición para el desvanecimiento */
+}
+
+.logo {
+    font-size: 38px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center; /* centrado en el contenedor */
+    align-items: center;
+}
+
+.logo i {
+    color: rgb(52, 39, 39); /* candado negro */
+    font-size: 28px;
+    margin-right: 2px; /* si quieres apenas un pelín de espacio */
+}
+
+.logo .secure {
+    color: rgb(16, 15, 15);
+}
+
+.logo .sab {
+    color: #6abf4b; /* verde claro */
+}

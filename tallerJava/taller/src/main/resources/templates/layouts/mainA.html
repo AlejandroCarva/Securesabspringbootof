@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title layout:fragment="title">Aprendiz</title> 
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    
+    <!-- ✅ SOLUCIÓN: USA LA RUTA CORRECTA COMO EL LOGIN -->
+    <link rel="stylesheet" th:href="@{/css/estilosA.css}">
+</head>
+<body>
+
+    <button id="toggleMenuBtn" class="menu-toggle" aria-controls="sidebar" aria-expanded="false" title="Alternar menú lateral">☰</button>
+
+    <aside class="sidebar" id="sidebar">
+        <h2 class="sidebar-title">Bienvenido</h2>
+        <h2 class="sidebar-title">Aprendiz</h2>
+        <div class="hola"></div>
+
+        <nav aria-label="Menú Principal de la Aplicación">
+            <ul id="menu">
+                <li data-section="asistencia">
+                    <a th:href="@{/aprendiz/asistencia}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="16" y1="2" x2="16" y2="6"></line>
+                            <line x1="8" y1="2" x2="8" y2="6"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                        </svg>
+                        <span>Consultar Asistencia</span>
+                    </a>
+                </li>
+                <li data-section="radicar-solicitud">
+                    <a th:href="@{/aprendiz/radicar-justificacion}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        <span>Radicar Justificación</span>
+                    </a>
+                </li>
+                <li data-section="historial-justificaciones">
+                    <a th:href="@{/aprendiz/estado-justificaciones}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        <span>Estado Justificación</span>
+                    </a>
+                </li>
+                <li data-section="perfil">
+                    <a th:href="@{/aprendiz/perfil}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Mi Perfil</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="sidebar-logo">
+                <span class="logo-text">secure</span>
+                <span class="logo-highlight">Sab</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content-wrapper" style="min-height: 100vh;">
+        <header class="barra-superior">
+            <div class="header-right">
+                <div class="user-menu" id="userMenu" role="button" aria-haspopup="true" aria-expanded="false">
+                    <img th:src="${usuario.fotoPerfil != null} ? @{'/uploads/' + ${usuario.fotoPerfil}} : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'" 
+                         alt="Foto de perfil del usuario" 
+                         class="user-photo" />
+                    <span class="user-name" th:text="${usuario.nombre != null} ? ${usuario.nombre} : 'Aprendiz'"></span>
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <ul role="menu">
+                        <li role="menuitem">
+                            <a th:href="@{/aprendiz/perfil}"><i class="fas fa-user"></i> Mi Perfil</a>
+                        </li>
+                        <li role="menuitem" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <section class="content-sections-container" style="min-height: 100vh;">
+            <!-- ✅✅✅ ESTA ES LA LÍNEA CLAVE CORREGIDA -->
+            <div layout:fragment="content"></div>
+        </section>
+    </main>
+
+    <form id="logoutForm" th:action="@{/logout}" method="POST" style="display:none;">
+        
+    </form>
+ 
+    
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="/js/logicaA.js"></script>
+
+    <!-- Script de depuración temporal -->
+
+
+
+</body>
+</html>

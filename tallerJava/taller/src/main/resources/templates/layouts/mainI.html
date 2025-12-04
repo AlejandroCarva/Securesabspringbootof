@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title layout:fragment="title">Instructor - SENA</title>
+    
+    <!-- ✅ IMPORTANTE: Bootstrap DEBE ir ANTES de estilos personalizados -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    
+    <!-- Estilos personalizados DESPUÉS de Bootstrap -->
+    <link rel="stylesheet" th:href="@{/css/estilosI.css}">
+</head>
+<body>
+
+    <button id="toggleMenuBtn" class="menu-toggle" aria-controls="sidebar" aria-expanded="false" title="Alternar menú lateral">☰</button>
+
+    <aside class="sidebar" id="sidebar">
+        <h2 class="sidebar-title">Bienvenido</h2>
+        <h2 class="sidebar-title">Instructor</h2>
+        <div class="hola"></div>
+
+        <nav aria-label="Menú Principal de la Aplicación">
+            <ul id="menu">
+                <!-- Gestionar Asistencias -->
+                <li th:class="${activePage == 'gestionar-asistencia'} ? 'active' : ''">
+                    <a th:href="@{/instructor/gestionar-asistencia}" class="menu-link">
+                        <i class="fas fa-calendar-alt me-2"></i>
+                        <span>Gestionar Asistencias</span>
+                    </a>
+                </li>
+
+                <!-- Consultar Asistencias -->
+                <li th:class="${activePage == 'consultar-asistencias'} ? 'active' : ''">
+                    <a th:href="@{/instructor/consultar-asistencias}" class="menu-link">
+                        <i class="fas fa-search me-2"></i>
+                        <span>Consultar Asistencias</span>
+                    </a>
+                </li>
+
+                <!-- Novedades Aprendices -->
+                <li th:class="${activePage == 'novedades-aprendices'} ? 'active' : ''">
+                    <a th:href="@{/instructor/novedades-aprendices}" class="menu-link">
+                        <i class="fas fa-bell me-2"></i>
+                        <span>Novedades Aprendices</span>
+                        <span th:if="${novedadesCount > 0}" class="notification-badge" 
+                              id="novedadesNotificationCount" th:text="${novedadesCount}">0</span>
+                    </a>
+                </li>
+
+                <!-- Mi Perfil -->
+                <li th:class="${activePage == 'perfil'} ? 'active' : ''">
+                    <a th:href="@{/instructor/perfil}" class="menu-link">
+                        <i class="fas fa-user me-2"></i>
+                        <span>Mi Perfil</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="sidebar-logo">
+                <span class="logo-text">secure</span>
+                <span class="logo-highlight">Sab</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content-wrapper">
+        <header class="barra-superior">
+            <div class="header-right">
+                <div class="user-menu" id="userMenu" role="button" aria-haspopup="true" aria-expanded="false">
+                    <img th:src="${usuario != null and usuario.fotoPerfil != null} ? 
+                                 @{'/uploads/' + ${usuario.fotoPerfil}} : 
+                                 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'" 
+                         alt="Foto de perfil del usuario" 
+                         class="user-photo" />
+                    <span class="user-name" th:text="${usuario != null and usuario.nombre != null} ? 
+                                                        ${usuario.nombre} + ' ' + ${usuario.apellido} : 'Instructor'"></span>
+                </div>
+                <div class="user-dropdown" id="userDropdown">
+                    <ul role="menu">
+                        <li role="menuitem">
+                            <a th:href="@{/instructor/perfil}"><i class="fas fa-user me-2"></i> Mi Perfil</a>
+                        </li>
+                        <li role="menuitem" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <section class="content-sections-container">
+            <div layout:fragment="content"></div>
+        </section>
+    </main>
+
+    <form id="logoutForm" th:action="@{/logout}" method="POST" style="display:none;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    </form>
+
+    <!-- ✅ SCRIPTS EN ORDEN CORRECTO -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script th:src="@{/js/logicaI.js}"></script>
+    <script th:src="@{/js/asistencia.js}"></script>
+
+    <th:block layout:fragment="scripts"></th:block>
+
+</body>
+</html>

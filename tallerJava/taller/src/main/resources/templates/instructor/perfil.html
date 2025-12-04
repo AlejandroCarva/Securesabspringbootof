@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/mainI}">
+<head>
+    <title layout:fragment="title">Mi Perfil</title>
+    
+    <style layout:fragment="styles">
+        .profile-details {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .profile-info-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .profile-info-group p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        
+        .profile-info-group strong {
+            color: #495057;
+            font-weight: 600;
+            display: inline-block;
+            width: 200px;
+        }
+        
+        .profile-info-group span {
+            color: #212529;
+        }
+        
+        .profile-actions {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        .primary-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .primary-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        #profileForm {
+            display: none;
+        }
+        
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+        
+        .alert-success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .alert-danger {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <section id="perfil-section" class="content-section" aria-labelledby="perfil-heading">
+            <h2 id="perfil-heading">Mi Perfil</h2>
+            
+            <!-- Mensajes de éxito/error -->
+            <div th:if="${param.success != null}" class="alert alert-success">
+                <i class="fas fa-check-circle me-2"></i>
+                Foto de perfil actualizada correctamente
+            </div>
+            
+            <div th:if="${param.error != null}" class="alert alert-danger">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                <span th:text="${param.error}">Error al actualizar la foto</span>
+            </div>
+            
+            <!-- ¡¡¡SIMPLEMENTE ELIMINA TODO ESTO!!! -->
+            <!-- NO DEBES TENER NADA AQUÍ ENTRE LOS MENSAJES Y profile-details -->
+            
+            <div class="profile-details">
+                <div class="profile-info-group">
+                    <p>
+                        <strong>Nombre Completo:</strong> 
+                        <span id="miPerfilNombre">
+                            <span th:text="${usuario.nombre}"></span> 
+                            <span th:text="${usuario.apellido}"></span>
+                        </span>
+                    </p>
+                    <p>
+                        <strong>Correo Electrónico:</strong> 
+                        <span id="miPerfilEmail" th:text="${usuario.correo}"></span>
+                    </p>
+                </div>
+                <div class="profile-info-group">
+                    <p>
+                        <strong>Rol:</strong> 
+                        <span id="miPerfilRol">
+                            <span th:if="${usuario.roles != null and not usuario.roles.isEmpty()}"
+                                  th:text="${usuario.roles[0].name}">
+                            </span>
+                            <span th:if="${usuario.roles == null or usuario.roles.isEmpty()}">
+                                Sin rol asignado
+                            </span>
+                        </span>
+                    </p>
+                    <p>
+                        <strong>Ficha:</strong> 
+                        <span id="miPerfilFicha">
+                            <span th:if="${usuario.ficha != null and usuario.ficha.numeroFicha != null}"
+                                  th:text="${usuario.ficha.numeroFicha}">
+                            </span>
+                            <span th:if="${usuario.ficha == null or usuario.ficha.numeroFicha == null}">
+                                No asignada
+                            </span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="primary-btn" onclick="document.getElementById('foto_perfil').click()">
+                    <i class="fas fa-camera me-2"></i>Cambiar Foto de Perfil
+                </button>
+            </div>
+
+            <!-- Formulario oculto para subir foto -->
+            <form id="profileForm" th:action="@{/instructor/actualizar-foto-perfil}" 
+                  method="POST" enctype="multipart/form-data" style="display: none;">
+                <input type="file" name="foto_perfil" id="foto_perfil" 
+                       accept="image/*" onchange="this.form.submit()">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            </form>
+        </section>
+        
+        <script th:inline="javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('foto_perfil');
+            
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+                    const maxSize = 5 * 1024 * 1024; // 5MB
+                    
+                    if (!validTypes.includes(file.type)) {
+                        alert('Por favor seleccione una imagen (JPEG, PNG, JPG, GIF)');
+                        fileInput.value = '';
+                        return false;
+                    }
+                    
+                    if (file.size > maxSize) {
+                        alert('La imagen no debe superar los 5MB');
+                        fileInput.value = '';
+                        return false;
+                    }
+                    
+                    const uploadBtn = document.querySelector('.primary-btn');
+                    if (uploadBtn) {
+                        const originalText = uploadBtn.innerHTML;
+                        uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Subiendo...';
+                        uploadBtn.disabled = true;
+                        
+                        setTimeout(() => {
+                            uploadBtn.innerHTML = originalText;
+                            uploadBtn.disabled = false;
+                        }, 3000);
+                    }
+                }
+            });
+        });
+        </script>
+    </div>
+</body>
+</html>
