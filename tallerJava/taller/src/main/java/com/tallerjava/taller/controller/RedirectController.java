@@ -22,10 +22,14 @@ public class RedirectController {
                 return "redirect:/aprendiz/asistencia";
 
             case "ROLE_INSTRUCTOR":
-                return "redirect:/instructor/gestionar-asistencia"; // ✅ CAMBIADO
+                return "redirect:/instructor/gestionar-asistencia";
 
             case "ROLE_COORDINADOR":
-                return "redirect:/coordinador/home";
+                // 👉 Ahora lo mandamos a asistencia-sede
+                return "redirect:/coordinador/asistencia-sede";
+
+            case "ROLE_VIGILANTE":
+                return "redirect:/vigilante/consultar-invitados";
 
             default:
                 return "redirect:/home";

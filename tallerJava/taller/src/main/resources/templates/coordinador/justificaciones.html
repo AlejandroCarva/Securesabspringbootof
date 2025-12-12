@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<body th:replace="~{layouts/indexC :: layout(~{::content})}">
+<div th:fragment="content">
+    <section id="justificaciones-section" class="content-section active-section" aria-labelledby="justificaciones-heading">
+
+        <div class="section-header">
+            <div>
+                <h2 id="justificaciones-heading">Justificaciones</h2>
+                <p class="section-subtitle">Resumen y estado de las justificaciones de aprendices</p>
+            </div>
+        </div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card kpi-pendiente" aria-label="Justificaciones pendientes">
+                <div class="kpi-icon"><i class="fas fa-hourglass-half"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-title">Pendientes</span>
+                    <span class="kpi-value" id="justCountPendiente">0</span>
+                </div>
+            </div>
+
+            <div class="kpi-card kpi-aprobada" aria-label="Justificaciones aprobadas">
+                <div class="kpi-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-title">Aprobadas</span>
+                    <span class="kpi-value" id="justCountAprobada">0</span>
+                </div>
+            </div>
+
+            <div class="kpi-card kpi-rechazada" aria-label="Justificaciones rechazadas">
+                <div class="kpi-icon"><i class="fas fa-times-circle"></i></div>
+                <div class="kpi-content">
+                    <span class="kpi-title">Rechazadas</span>
+                    <span class="kpi-value" id="justCountRechazada">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chip-bar" id="justFilterBar" role="tablist" aria-label="Filtrar por estado">
+            <button class="chip active" data-estado="all" role="tab" aria-selected="true">Todos</button>
+            <button class="chip" data-estado="Pendiente" role="tab" aria-selected="false">
+                <span class="status-dot is-pendiente"></span>Pendiente
+            </button>
+            <button class="chip" data-estado="Aprobada" role="tab" aria-selected="false">
+                <span class="status-dot is-aprobada"></span>Aprobada
+            </button>
+            <button class="chip" data-estado="Rechazada" role="tab" aria-selected="false">
+                <span class="status-dot is-rechazada"></span>Rechazada
+            </button>
+        </div>
+
+        <p class="note">Vista conectada a la base de datos. La gestión detallada la realiza el Instructor.</p>
+
+        <div class="table-responsive">
+            <table class="data-table sticky-head just-table">
+                <thead>
+                <tr>
+                    <th>ID Justificación</th>
+                    <th>ID Asistencia Ambiente</th>
+                    <th>Motivo</th>
+                    <th>Soporte</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Observaciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${justificaciones == null or #lists.isEmpty(justificaciones)}">
+                    <td colspan="7" class="no-data-message">No hay justificaciones registradas.</td>
+                </tr>
+                <tr th:each="j : ${justificaciones}">
+                    <td th:text="${j.id}"></td>
+                    <td th:text="${j.asistenciaAmbiente != null ? j.asistenciaAmbiente.id : 'N/D'}"></td>
+                    <td th:text="${j.motivo}"></td>
+                    <td th:text="${j.soporte}"></td>
+                    <td th:text="${j.fecha}"></td>
+                    <td th:text="${j.estado}"></td>
+                    <td th:text="${j.observaciones}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</div> <!-- 👈 CIERRE DEL FRAGMENTO -->
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<body th:replace="~{layouts/indexC :: layout(~{::content})}">
+<div th:fragment="content">
+    <style>
+        /* Reducir tamaño y visibilidad de la lupa decorativa para que no interfiera */
+        .decorative-magnifier,
+        .hero-magnifier,
+        body > svg,
+        .main-content-wrapper > svg,
+        .content-section > svg,
+        .content-section > canvas {
+            display: block !important;
+            position: absolute !important;
+            right: 2.5rem !important;
+            top: 2.5rem !important;
+            width: 120px !important;   /* tamaño más moderado */
+            height: 120px !important;  /* mantener proporción */
+            max-width: 18vw !important;
+            max-height: 18vw !important;
+            opacity: 0.16 !important;  /* muy translúcida */
+            transform: none !important;
+            pointer-events: none !important; /* evitar que bloquee clicks */
+            z-index: 0 !important; /* detrás del contenido */
+        }
+
+        /* Pseudo-elementos decorativos menos intrusivos */
+        .content-section::before,
+        .content-section::after {
+            display: none !important; /* mantener ocultos si causan superposición */
+        }
+    </style>
+    <section id="editar-novedad-section" class="content-section active-section" aria-labelledby="editar-novedad-heading">
+        <div class="section-header">
+            <div>
+                <h2 id="editar-novedad-heading">Editar novedad</h2>
+                <p class="section-subtitle">Actualice los datos y presione actualizar</p>
+            </div>
+            <!-- Volver a la lista de novedades (ruta general) -->
+            <a th:href="@{/coordinador/novedades}" class="btn btn-modern btn-outline">Volver</a>
+        </div>
+
+        <!-- DEBUG BANNER: muestra id y título de la novedad (temporal) -->
+        <div th:if="${novedad != null}"
+             class="debug-banner"
+             style="background:#fff4e5;border:1px solid #ffd8a8;padding:10px;margin:12px 0;border-radius:6px;color:#92400e;">
+            <strong>DEBUG:</strong>&nbsp;
+            <span th:text="${'Novedad id=' + novedad.id + ' - ' + novedad.titulo}">
+                Novedad id= - Título
+            </span>
+        </div>
+
+        <!-- Mensajes de error -->
+        <div th:if="${errors != null}">
+            <div class="alert alert-error">
+                <ul>
+                    <li th:each="err : ${errors}" th:text="${err}">Error</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Mensaje de éxito (flash) -->
+        <div th:if="${success != null}">
+            <div class="alert alert-success" th:text="${success}">Actualización exitosa</div>
+        </div>
+
+        <div class="single-column">
+            <article class="card-box"
+                     style="background: white; border-radius: 0.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 1.5rem;">
+
+                <!-- Mostrar formulario solo si el objeto 'novedad' existe en el modelo -->
+                <div th:if="${novedad != null}">
+                    <!-- Encabezado -->
+                    <div style="padding: 1rem; background: linear-gradient(to right, rgb(240 253 244), rgb(209 250 229)); border-radius: 0.375rem; margin-bottom: 1.5rem;">
+                        <h3 style="margin: 0; font-size: 1.25rem; font-weight: 600; color: #065f46;">
+                            Editar novedad
+                        </h3>
+                    </div>
+
+                    <!-- Formulario -->
+                    <form id="formEditarNovedad"
+                          autocomplete="off"
+                          th:action="@{/coordinador/novedades/actualizar}"
+                          method="post"
+                          enctype="multipart/form-data">
+
+                        <input type="hidden" name="id" th:value="${novedad.id}" />
+
+                        <div style="display: grid; gap: 1rem;">
+
+                            <!-- Ficha afectada -->
+                            <div>
+                                <label for="novedadFicha" style="display: block; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                    Ficha afectada <span style="color: #ef4444;">*</span>
+                                </label>
+                                <select id="novedadFicha" name="fichaId" required
+                                        style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background-color: white; color: #111827;">
+                                    <option value="">Seleccione la ficha</option>
+                                    <option th:each="f : ${listaFichas}"
+                                            th:value="${f.id}"
+                                            th:text="${f.numeroFicha}"
+                                            th:selected="${novedad.ficha != null and f.id == novedad.ficha.id}">
+                                        F-000
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Instructor responsable -->
+                            <div>
+                                <label for="novedadInstructor" style="display: block; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                    Instructor responsable <span style="color: #ef4444;">*</span>
+                                </label>
+                                <select id="novedadInstructor" name="instructorId" required
+                                        style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background-color: white; color: #111827;">
+                                    <option value="">Seleccione un instructor</option>
+                                    <option th:each="u : ${listaInstructores}"
+                                            th:value="${u.idUsuario}"
+                                            th:text="${u.apellido != null ? #strings.concat(u.nombre,' ',u.apellido) : u.nombre}"
+                                            th:selected="${novedad.instructor != null and u.idUsuario == novedad.instructor.idUsuario}">
+                                        Nombre Apellido
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Tipo de novedad -->
+                            <div>
+                                <label for="novedadTipo" style="display: block; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                    Tipo de novedad
+                                </label>
+                                <select id="novedadTipo" name="tipo"
+                                        style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background-color: white; color: #111827;">
+                                    <option value="Comunicado"
+                                            th:selected="${novedad.tipo != null and novedad.tipo == 'Comunicado'}">
+                                        Comunicado
+                                    </option>
+                                    <option value="Seguimiento"
+                                            th:selected="${novedad.tipo != null and novedad.tipo == 'Seguimiento'}">
+                                        Seguimiento
+                                    </option>
+                                    <option value="Alerta"
+                                            th:selected="${novedad.tipo != null and novedad.tipo == 'Alerta'}">
+                                        Alerta
+                                    </option>
+                                </select>
+                            </div>
+
+                            <!-- Estado (con selección del estado actual) -->
+                            <div>
+                                <label for="novedadEstado" style="display: block; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                    Estado
+                                </label>
+                                <select id="novedadEstado" name="estado"
+                                        style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background-color: white; color: #111827;">
+                                    <option value="Pendiente"
+                                            th:selected="${novedad.estado == 'Pendiente'}">Pendiente</option>
+                                    <option value="En proceso"
+                                            th:selected="${novedad.estado == 'En proceso'}">En proceso</option>
+                                    <option value="Resuelto"
+                                            th:selected="${novedad.estado == 'Resuelto'}">Resuelto</option>
+                                    <option value="Aprobado"
+                                            th:selected="${novedad.estado == 'Aprobado'}">Aprobado</option>
+                                    <option value="Rechazado"
+                                            th:selected="${novedad.estado == 'Rechazado'}">Rechazado</option>
+                                </select>
+                            </div>
+
+                            <!-- Título -->
+                            <div>
+                                <label for="novedadTitulo" style="display: block; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                    Título / asunto <span style="color: #ef4444;">*</span>
+                                </label>
+                                <input type="text"
+                                       id="novedadTitulo"
+                                       name="titulo"
+                                       th:value="${novedad.titulo}"
+                                       required
+                                       placeholder="Ej. Falta de dotación para la práctica"
+                                       style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background-color: white; color: #111827;" />
+                            </div>
+
+                            <!-- Descripción -->
+                            <div>
+                                <label for="novedadDescripcion" style="display: block; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                    Descripción detallada <span style="color: #ef4444;">*</span>
+                                </label>
+                                <textarea id="novedadDescripcion"
+                                          name="descripcion"
+                                          rows="5"
+                                          required
+                                          placeholder="Describe lo sucedido, responsables, fechas y acciones propuestas"
+                                          style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background-color: white; color: #111827; resize: vertical;"
+                                          th:text="${novedad.descripcion}">
+                                </textarea>
+                            </div>
+
+                            <!-- Respuesta -->
+                            <div>
+                                <label for="novedadRespuesta" style="display: block; font-size: 0.875rem; margin-bottom: 0.5rem;">
+                                    Respuesta del coordinador (opcional)
+                                </label>
+                                <textarea id="novedadRespuesta"
+                                          name="respuesta"
+                                          rows="5"
+                                          placeholder="Escribe una respuesta o seguimiento para el instructor..."
+                                          style="width: 100%; padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background-color: white; color: #111827; resize: vertical;"
+                                          th:text="${novedad.respuesta}">
+                                </textarea>
+                            </div>
+
+                            <!-- Adjunto -->
+                            <div>
+                                <label for="archivoNueva" style="display:block; font-size:0.875rem; margin-bottom:0.5rem;">
+                                    Adjunto (opcional)
+                                </label>
+                                <div style="margin-bottom:0.5rem;">
+                                    <span th:if="${novedad.archivoAdjunto != null and novedad.archivoAdjunto != ''}">
+                                        <a th:href="@{/coordinador/novedades/archivo/{f}(f=${novedad.archivoAdjunto})}"
+                                           target="_blank"
+                                           class="text-blue-600 hover:underline">
+                                            Ver adjunto actual
+                                        </a>
+                                    </span>
+                                    <span th:unless="${novedad.archivoAdjunto != null and novedad.archivoAdjunto != ''}">
+                                        No hay adjunto
+                                    </span>
+                                </div>
+                                <input type="file" id="archivoNueva" name="archivo" class="w-full" />
+                            </div>
+
+                            <!-- Botones -->
+                            <div style="display: flex; gap: 0.75rem; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid #e5e7eb;">
+                                <a th:href="@{/coordinador/novedades}"
+                                   style="padding: 0.5rem 1rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background-color: white; color: #374151; text-decoration: none; display: inline-block; cursor: pointer;"
+                                   onmouseover="this.style.backgroundColor='#f9fafb'"
+                                   onmouseout="this.style.backgroundColor='white'">
+                                    Cancelar
+                                </a>
+                                <button type="submit"
+                                        style="padding: 0.5rem 1rem; background-color: #15803d; color: white; border-radius: 0.375rem; border: none; cursor: pointer;"
+                                        onmouseover="this.style.backgroundColor='#166534'"
+                                        onmouseout="this.style.backgroundColor='#15803d'">
+                                    Actualizar novedad
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Si no hay novedad en el modelo mostrar un mensaje amigable -->
+                <div th:unless="${novedad != null}" class="p-4 text-center text-gray-600">
+                    <p>No se encontró la novedad solicitada. Por favor vuelve a la lista de novedades.</p>
+                    <a th:href="@{/coordinador/novedades}" class="btn primary-btn mt-3">Volver a novedades</a>
+                </div>
+            </article>
+        </div>
+    </section>
+</div>
+
+<script th:src="@{/js/editar-novedad.js}" src="/js/editar-novedad.js"></script>
+</body>
+</html>

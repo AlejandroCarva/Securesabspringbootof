@@ -119,23 +119,13 @@
                     <p>
                         <strong>Rol:</strong> 
                         <span id="miPerfilRol">
-                            <span th:if="${usuario.roles != null and not usuario.roles.isEmpty()}"
-                                  th:text="${usuario.roles[0].name}">
-                            </span>
-                            <span th:if="${usuario.roles == null or usuario.roles.isEmpty()}">
-                                Sin rol asignado
-                            </span>
+                            Instructor
                         </span>
                     </p>
                     <p>
                         <strong>Ficha:</strong> 
                         <span id="miPerfilFicha">
-                            <span th:if="${usuario.ficha != null and usuario.ficha.numeroFicha != null}"
-                                  th:text="${usuario.ficha.numeroFicha}">
-                            </span>
-                            <span th:if="${usuario.ficha == null or usuario.ficha.numeroFicha == null}">
-                                No asignada
-                            </span>
+                            No asignada
                         </span>
                     </p>
                 </div>

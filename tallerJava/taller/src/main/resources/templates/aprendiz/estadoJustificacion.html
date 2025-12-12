@@ -1,112 +1,111 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org"
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/mainA}">
 <head>
     <title layout:fragment="title">Estado de Justificaciones</title>
-    <link rel="stylesheet" th:href="@{/css/estadoJustificaciones.css}">
 </head>
+
 <body>
-    <div layout:fragment="content">
-        <section id="estado-justificaciones-section" class="content-section active-section" aria-labelledby="estado-justificaciones-heading">
-            <h2 id="estado-justificaciones-heading">Estado de Justificaciones</h2>
+<div layout:fragment="content">
+    <section id="estado-justificaciones-section" class="content-section active-section" aria-labelledby="estado-justificaciones-heading">
 
-            <!-- Filtros -->
-            <div class="filtros-container">
-                <form th:action="@{/aprendiz/estado-justificaciones}" method="GET" class="filtros-form">
-                    <div class="form-group filtro-group">
-                        <label for="competencia">Filtrar por Competencia:</label>
-                        <input type="text" id="competencia" name="competencia" 
-                               placeholder="Ej: Base De Datos"
-                               th:value="${param.competencia}" />
-                    </div>
-
-                    <div class="form-group filtro-group">
-                        <label for="fecha">Filtrar por Fecha:</label>
-                        <input type="date" id="fecha" name="fecha" 
-                               th:value="${param.fecha}" />
-                    </div>
-
-                    <div class="form-group filtro-actions">
-                        <button type="submit" class="btn primary-btn">Aplicar Filtro</button>
-                        <a th:href="@{/aprendiz/estado-justificaciones}" class="btn secondary-btn">Limpiar Filtros</a>
-                    </div>
-                </form>
+        <div class="section-header">
+            <div>
+                <h2 id="estado-justificaciones-heading">Estado de Justificaciones</h2>
+                <p class="section-subtitle">Consulta el estado de tus solicitudes y descarga evidencias</p>
             </div>
+        </div>
 
-            <!-- Tabla de justificaciones -->
+        <!-- Filtros -->
+        <div class="filters-card">
+            <form th:action="@{/aprendiz/estado-justificaciones}" method="GET" class="filters-grid">
+                <div class="form-group">
+                    <label for="competencia">Competencia</label>
+                    <input type="text" id="competencia" name="competencia"
+                           placeholder="Ej. Base de Datos"
+                           th:value="${param.competencia}" />
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha">Fecha</label>
+                    <input type="date" id="fecha" name="fecha"
+                           th:value="${param.fecha}" />
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-modern btn-primary">Aplicar filtro</button>
+                    <a th:href="@{/aprendiz/estado-justificaciones}" class="btn btn-modern btn-outline">Limpiar</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tabla -->
+        <div class="table-card">
             <div class="table-responsive">
-                <table id="historialJustificacionesTable">
-                    <caption id="historial-justificaciones-table-caption" class="sr-only">Tabla de Historial de Justificaciones</caption>
+                <table class="table-modern" aria-describedby="historial-justificaciones-table-caption">
+                    <caption id="historial-justificaciones-table-caption" class="sr-only">
+                        Tabla de Historial de Justificaciones
+                    </caption>
+
                     <thead>
-                        <tr>
-                            <th scope="col">Fecha Solicitud</th>
-                            <th scope="col">Fecha Inasistencia</th>
-                            <th scope="col">Competencia</th>
-                            <th scope="col">Motivo</th>
-                            <th scope="col">Estado</th>
-                            <th scope="col">Evidencia</th>
-                        </tr>
+                    <tr>
+                        <th scope="col">Fecha Solicitud</th>
+                        <th scope="col">Fecha Inasistencia</th>
+                        <th scope="col">Competencia</th>
+                        <th scope="col">Motivo</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Evidencia</th>
+                    </tr>
                     </thead>
+
                     <tbody>
-                        <!-- Si hay justificaciones -->
-                        <tr th:each="justificacion : ${justificaciones}" th:if="${not justificaciones.empty}">
-                            <!-- Fecha de la justificación -->
-                            <td th:text="${justificacion.fecha != null} ? ${#temporals.format(justificacion.fecha, 'dd/MM/yyyy')} : 'N/A'">
-                                Fecha
-                            </td>
-                            
-                            <!-- Fecha de inasistencia -->
-                            <td th:if="${justificacion.asistenciaAmbiente != null and justificacion.asistenciaAmbiente.fecha != null}"
-                                th:text="${#temporals.format(justificacion.asistenciaAmbiente.fecha, 'dd/MM/yyyy')}">
-                                Fecha Inasistencia
-                            </td>
-                            <td th:unless="${justificacion.asistenciaAmbiente != null and justificacion.asistenciaAmbiente.fecha != null}">
-                                N/A
-                            </td>
-                            
-                            <!-- Competencia -->
-                            <td th:if="${justificacion.asistenciaAmbiente != null and justificacion.asistenciaAmbiente.competencia != null}"
-                                th:text="${justificacion.asistenciaAmbiente.competencia.nombreCompetencia} ?: 'N/A'">
-                                Competencia
-                            </td>
-                            <td th:unless="${justificacion.asistenciaAmbiente != null and justificacion.asistenciaAmbiente.competencia != null}">
-                                N/A
-                            </td>
-                            
-                            <!-- Motivo -->
-                            <td th:text="${justificacion.motivo != null} ? ${#strings.abbreviate(justificacion.motivo, 50)} : 'Sin motivo'">
-                                Motivo
-                            </td>
-                            
-                            <!-- Estado con badge -->
-                            <td>
-                                <span th:classappend="'estado-badge estado-' + ${#strings.toLowerCase(justificacion.estado)}"
-                                      th:text="${justificacion.estado} ?: 'PENDIENTE'">
-                                    Estado
-                                </span>
-                            </td>
-                            
-                            <!-- Evidencia -->
-                            <td>
-                                <a th:if="${justificacion.soporte}" 
-                                   th:href="@{'/uploads/' + ${justificacion.soporte}}"
-                                   class="btn-download" title="Descargar evidencia" download
-                                   target="_blank">
-                                    📄 Descargar
-                                </a>
-                                <span th:unless="${justificacion.soporte}">Sin evidencia</span>
-                            </td>
-                        </tr>
-                        
-                        <!-- Si no hay justificaciones -->
-                        <tr th:if="${justificaciones.empty}">
-                            <td colspan="6" style="text-align: center;">No hay justificaciones registradas.</td>
-                        </tr>
+                    <tr th:each="justificacion : ${justificaciones}">
+                        <td th:text="${justificacion.fecha != null ? #temporals.format(justificacion.fecha, 'dd/MM/yyyy') : 'N/A'}">Fecha</td>
+
+                        <td th:if="${justificacion.asistenciaAmbiente != null and justificacion.asistenciaAmbiente.fecha != null}"
+                            th:text="${#temporals.format(justificacion.asistenciaAmbiente.fecha, 'dd/MM/yyyy')}">Fecha Inasistencia</td>
+                        <td th:unless="${justificacion.asistenciaAmbiente != null and justificacion.asistenciaAmbiente.fecha != null}">N/A</td>
+
+                        <td th:if="${justificacion.asistenciaAmbiente != null and justificacion.asistenciaAmbiente.competencia != null}"
+                            th:text="${justificacion.asistenciaAmbiente.competencia.nombreCompetencia ?: 'N/A'}">Competencia</td>
+                        <td th:unless="${justificacion.asistenciaAmbiente != null and justificacion.asistenciaAmbiente.competencia != null}">N/A</td>
+
+                        <td th:text="${justificacion.motivo != null ? #strings.abbreviate(justificacion.motivo, 50) : 'Sin motivo'}">Motivo</td>
+
+                        <td>
+                            <span class="badge"
+                                  th:classappend="${justificacion.estado != null ? ' badge-' + #strings.toLowerCase(justificacion.estado) : ' badge-pendiente'}"
+                                  th:text="${justificacion.estado ?: 'PENDIENTE'}">Estado</span>
+                        </td>
+
+                        <td>
+                            <a th:if="${justificacion.soporte}"
+                               th:href="@{/uploads/{file}(file=${justificacion.soporte})}"
+                               class="btn btn-modern btn-outline btn-sm"
+                               title="Descargar evidencia"
+                               download target="_blank">
+                                Descargar
+                            </a>
+                            <span th:unless="${justificacion.soporte}" class="muted">Sin evidencia</span>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(justificaciones)}">
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <div class="empty-title">Sin registros</div>
+                                <div class="empty-subtitle">No hay justificaciones registradas.</div>
+                            </div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
-        </section>
-    </div>
+        </div>
+
+    </section>
+</div>
 </body>
 </html>

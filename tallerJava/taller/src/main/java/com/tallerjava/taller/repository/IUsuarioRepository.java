@@ -20,11 +20,11 @@ public interface IUsuarioRepository extends JpaRepository<Usuario, Integer> {
     // ✅ NUEVOS MÉTODOS PARA INSTRUCTOR:
     
     // 1. Obtener aprendices por ficha
-    @Query("SELECT u FROM Usuario u WHERE u.ficha.idFicha = :fichaId")
+    @Query("SELECT u FROM Usuario u WHERE u.ficha.id = :fichaId")
     List<Usuario> findByFichaId(@Param("fichaId") Integer fichaId);
     
     // 2. Contar aprendices por ficha
-    @Query("SELECT COUNT(u) FROM Usuario u WHERE u.ficha.idFicha = :fichaId")
+    @Query("SELECT COUNT(u) FROM Usuario u WHERE u.ficha.id = :fichaId")
     Long countByFichaId(@Param("fichaId") Integer fichaId);
     
     // 3. Verificar si usuario es aprendiz (tiene ficha asignada)
@@ -50,4 +50,8 @@ public interface IUsuarioRepository extends JpaRepository<Usuario, Integer> {
     List<Usuario> findByFichaIdAndRolName(
         @Param("fichaId") Integer fichaId, 
         @Param("rolName") String rolName);
+
+    // 6. Obtener nombres de roles asociados a un usuario (por id_usuario)
+    @Query(value = "SELECT r.name FROM roles r INNER JOIN model_has_roles mhr ON r.id = mhr.role_id WHERE mhr.model_id = :userId", nativeQuery = true)
+    List<String> findRoleNamesByUserId(@Param("userId") Integer userId);
 }

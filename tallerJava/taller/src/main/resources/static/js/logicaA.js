@@ -1,23 +1,19 @@
-// logicaA.js - VERSION SIMPLIFICADA DE PRUEBA
+// logicaA.js - Lógica para el aprendiz
 console.log("logicaA.js CARGADO EXITOSAMENTE");
-
-// Funcion basica para probar
-function probarJavaScript() {
-    console.log("OK Funcion JavaScript ejecutada");
-    alert("JavaScript esta funcionando!");
-}
 
 // Ejecutar cuando se cargue la pagina
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("OK DOM completamente cargado y listo");
-    
+    console.log("✅ DOM completamente cargado y listo");
+
     // ✅ INICIALIZAR MENÚ ABIERTO
     const sidebar = document.querySelector('.sidebar');
     const body = document.body;
     const toggleBtn = document.getElementById('toggleMenuBtn');
-    
+    const userMenu = document.getElementById('userMenu');
+    const userDropdown = document.getElementById('userDropdown');
+
+    // --- 1. INICIALIZAR SIDEBAR ---
     if (sidebar) {
-        // ✅ FORZAR MENÚ ABIERTO AL INICIAR
         sidebar.classList.add('active');
         body.classList.remove('menu-closed');
         if (toggleBtn) {
@@ -26,29 +22,42 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log("✅ Menú inicializado como ABIERTO");
     }
     
-    // Agregar funcionalidad basica al boton de menu
+    // --- 2. TOGGLE SIDEBAR CON BOTÓN HAMBURGUESA ---
     if (toggleBtn) {
-        toggleBtn.addEventListener('click', function() {
-            console.log("OK Boton de menu clickeado");
+        toggleBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
             if (sidebar) {
                 sidebar.classList.toggle('active');
                 body.classList.toggle('menu-closed');
-                toggleBtn.setAttribute('aria-expanded', sidebar.classList.contains('active'));
-                console.log("Menu toggled");
+                const isActive = sidebar.classList.contains('active');
+                toggleBtn.setAttribute('aria-expanded', isActive);
+                console.log("✅ Sidebar toggled:", isActive ? 'ABIERTO' : 'CERRADO');
             }
         });
     }
     
-    // Probar el select de motivo
-    const selectMotivo = document.getElementById('descripcionSolicitud');
-    if (selectMotivo) {
-        selectMotivo.addEventListener('change', function() {
-            console.log("OK Select cambiado a:", this.value);
+    // --- 3. TOGGLE DROPDOWN DE USUARIO ---
+    if (userMenu) {
+        userMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (userDropdown) {
+                userDropdown.classList.toggle('active');
+                userMenu.setAttribute('aria-expanded', userDropdown.classList.contains('active'));
+                console.log("✅ User dropdown toggled");
+            }
         });
     }
     
-    console.log("TODAS las funcionalidades inicializadas");
-});
+    // --- 4. CERRAR DROPDOWN AL HACER CLICK FUERA ---
+    document.addEventListener('click', function(e) {
+        if (userDropdown && !userDropdown.contains(e.target) && !userMenu.contains(e.target)) {
+            userDropdown.classList.remove('active');
+            if (userMenu) {
+                userMenu.setAttribute('aria-expanded', 'false');
+            }
+        }
+    });
 
-// Tambien ejecutar inmediatamente
-console.log("JavaScript cargado y ejecutandose");
+
+    console.log("✅ TODAS las funcionalidades inicializadas");
+});

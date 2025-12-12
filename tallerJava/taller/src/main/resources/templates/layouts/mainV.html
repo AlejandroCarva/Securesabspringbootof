@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title layout:fragment="title">Vigilante</title>
+
+    <!-- CSS principales -->
+    <link rel="stylesheet" th:href="@{/css/estilosV.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- CSS extra por página -->
+    <th:block layout:fragment="extraHead"></th:block>
+</head>
+<body>
+
+<button id="toggleMenuBtn"
+        class="menu-toggle"
+        aria-controls="sidebar"
+        aria-expanded="false"
+        title="Alternar menú lateral">☰</button>
+
+<aside class="sidebar" id="sidebar">
+    <!-- CABECERA USUARIO LATERAL -->
+    <div class="sidebar-header">
+        <div class="sidebar-avatar">
+            <span th:text="${usuario != null ? (#strings.substring(usuario.nombre, 0, 1) + #strings.substring(usuario.apellido, 0, 1)) : 'VG'}"></span>
+        </div>
+        <div class="sidebar-user-info">
+            <span class="sidebar-user-role">Vigilante</span>
+            <span class="sidebar-user-username">@vigilante</span>
+        </div>
+    </div>
+
+    <!-- MENÚ PRINCIPAL -->
+    <nav class="sidebar-nav" aria-label="Menú Principal de la Aplicación">
+        <ul>
+            <li>
+                <a th:href="@{/vigilante/consultar-invitados}"
+                   class="sidebar-link"
+                   th:classappend="${activeSection} == 'consultar-invitados' ? ' active'">
+                    <span class="icon-badge">
+                        <i class="fas fa-users"></i>
+                    </span>
+                    <span class="sidebar-link-text">Consultar Invitados</span>
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/vigilante/registrar-invitados}"
+                   class="sidebar-link"
+                   th:classappend="${activeSection} == 'registrar-invitados' ? ' active'">
+                    <span class="icon-badge">
+                        <i class="fas fa-user-plus"></i>
+                    </span>
+                    <span class="sidebar-link-text">Registrar Invitados</span>
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/vigilante/registro-manual}"
+                   class="sidebar-link"
+                   th:classappend="${activeSection} == 'registro-manual' ? ' active'">
+                    <span class="icon-badge">
+                        <i class="fas fa-edit"></i>
+                    </span>
+                    <span class="sidebar-link-text">Registro Manual</span>
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/vigilante/historial-registro}"
+                   class="sidebar-link"
+                   th:classappend="${activeSection} == 'historial-registro' ? ' active'">
+                    <span class="icon-badge">
+                        <i class="fas fa-history"></i>
+                    </span>
+                    <span class="sidebar-link-text">Historial de Registros</span>
+                </a>
+            </li>
+
+            <li>
+                <a th:href="@{/vigilante/perfil}"
+                   class="sidebar-link"
+                   th:classappend="${activeSection} == 'perfil' ? ' active'">
+                    <span class="icon-badge">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <span class="sidebar-link-text">Mi Perfil</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- LOGO PIE -->
+    <div class="sidebar-footer">
+        <div class="sidebar-logo">
+            <span class="logo-text">secure</span>
+            <span class="logo-highlight">Sab</span>
+        </div>
+    </div>
+</aside>
+
+
+<main class="main-content-wrapper" style="min-height: 100vh;">
+
+    <!-- HEADER SUPERIOR CON AVATAR -->
+    <header class="top-header">
+        <div class="user-avatar-container" onclick="toggleDropdown()">
+            <div class="avatar-circle">
+                <span th:text="${usuario != null ? (#strings.substring(usuario.nombre, 0, 1) + #strings.substring(usuario.apellido, 0, 1)) : 'U'}"></span>
+            </div>
+            <div class="user-info-header">
+                <div class="user-name-header"
+                     th:text="${usuario != null ? (usuario.nombre + ' ' + usuario.apellido) : 'Vigilante'}"></div>
+                <div class="user-role-header">Vigilante</div>
+            </div>
+            <div class="dropdown-icon">
+                <i class="fa-solid fa-chevron-down" style="font-size: 12px; color: #999;"></i>
+            </div>
+        </div>
+
+        <div class="dropdown-menu" id="userDropdown">
+            <a th:href="@{/vigilante/perfil}" class="dropdown-item">
+                <i class="fa-solid fa-user" style="font-size: 14px; color: #00b894;"></i>
+                Perfil
+            </a>
+            <form th:action="@{/logout}" method="post" style="width: 100%;">
+                <button type="submit" class="dropdown-item logout">
+                    <i class="fa-solid fa-right-from-bracket"
+                       style="font-size: 14px; color: #dc3545;"></i>
+                    Cerrar Sesión
+                </button>
+            </form>
+        </div>
+    </header>
+
+    <!-- CONTENIDO -->
+    <section class="main-content">
+        <div class="content-sections-container">
+            <div class="content-section active-section" layout:fragment="content">
+                <!-- Contenido por defecto / placeholder -->
+                <h2>Panel Vigilante</h2>
+                <p>Selecciona una opción en el menú lateral.</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- LOGOUT CSRF -->
+<form id="logoutForm" th:action="@{/logout}" method="post" style="display:none;">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+</form>
+
+<!-- SCRIPTS GLOBALES -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="/js/sidebar.js"></script>
+<script src="/js/logout.js"></script>
+<script src="/js/logicaV.js"></script>
+
+<script>
+    function toggleDropdown() {
+        const dd = document.getElementById('userDropdown');
+        if (dd) dd.classList.toggle('show');
+    }
+
+    window.onclick = function(event) {
+        if (!event.target.matches('.user-avatar-container') &&
+            !event.target.matches('.user-avatar-container *')) {
+            const dropdowns = document.getElementsByClassName("dropdown-menu");
+            for (let i = 0; i < dropdowns.length; i++) {
+                const openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>
+
+<!-- JS extra por página -->
+<th:block layout:fragment="scripts"></th:block>
+
+</body>
+</html>

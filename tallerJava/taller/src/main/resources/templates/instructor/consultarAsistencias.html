@@ -4,7 +4,7 @@
       layout:decorate="~{layouts/mainI}">
 <head>
     <title layout:fragment="title">Consultar Asistencias</title>
-    
+
     <style layout:fragment="styles">
         .estado-asistio {
             background-color: #d4edda;
@@ -48,151 +48,152 @@
     </style>
 </head>
 <body>
-    <div layout:fragment="content">
-        <section id="consultar-asistencias-section" class="content-section" aria-labelledby="consultar-asistencias-heading">
-            <h2 id="consultar-asistencias-heading">Consultar Asistencias</h2>
-            
-            <form method="GET" th:action="@{/instructor/consultar-asistencias}" class="formulario-consulta">
-                <div class="fila-formulario">
-                    <div class="input-group">
-                        <label for="selector-ficha">Ficha:</label>
-                        <select id="selector-ficha" name="ficha_id" class="input-estilizado" required>
-                            <option value="">-- Seleccione una ficha --</option>
-                            <option th:each="item : ${fichasConCount}"
-                                    th:value="${item.ficha.idFicha}"
-                                    th:text="${(item.ficha.numeroFicha != null and not item.ficha.numeroFicha.isEmpty()) ? item.ficha.numeroFicha : 'Sin número'} + ' - ' + 
-                                             ${(item.ficha.programa != null and item.ficha.programa.nombrePrograma != null) ? item.ficha.programa.nombrePrograma : 'Sin programa'} + 
-                                             ' (' + ${item.aprendices_count} + ' aprendices)'"
-                                    th:selected="${fichaId != null and fichaId == item.ficha.idFicha}">
-                            </option>
-                        </select>
-                    </div>
-                    
-                    <div class="input-group">
-                        <label for="modo-fecha">Ver por:</label>
-                        <select id="modo-fecha" name="modo_fecha" class="input-estilizado" onchange="this.form.submit()">
-                            <option value="rango" th:selected="${(modoFecha != null) ? (modoFecha == 'rango') : true}">Rango de fechas</option>
-                            <option value="dia" th:selected="${modoFecha == 'dia'}">Día específico</option>
-                        </select>
-                    </div>
+<div layout:fragment="content">
+    <section id="consultar-asistencias-section" class="content-section" aria-labelledby="consultar-asistencias-heading">
+        <h2 id="consultar-asistencias-heading">Consultar Asistencias</h2>
+
+        <form method="GET" th:action="@{/instructor/consultar-asistencias}" class="formulario-consulta">
+            <div class="fila-formulario">
+                <div class="input-group">
+                    <label for="selector-ficha">Ficha:</label>
+                    <select id="selector-ficha" name="ficha_id" class="input-estilizado" required>
+                        <option value="">-- Seleccione una ficha --</option>
+                        <option th:each="item : ${fichasConCount}"
+                                th:value="${item.ficha.id}"
+                                th:text="${(item.ficha.numeroFicha != null and not #strings.isEmpty(item.ficha.numeroFicha) ? item.ficha.numeroFicha : 'Sin número')
+                                              + ' - '
+                                              + ((item.ficha.programa != null and item.ficha.programa.nombrePrograma != null) ? item.ficha.programa.nombrePrograma : 'Sin programa')
+                                              + ' (' + item.aprendices_count + ' aprendices)'}"
+                                th:selected="${fichaId != null and fichaId == item.ficha.id}">
+                        </option>
+                    </select>
                 </div>
 
-                <div class="fila-formulario">
-                    <div th:if="${(modoFecha != null) ? (modoFecha == 'rango') : true}">
-                        <div class="input-group">
-                            <label for="fecha-inicio">Desde:</label>
-                            <input type="date" id="fecha-inicio" name="fecha_inicio" 
-                                   th:value="${fechaInicio}" class="input-estilizado">
-                        </div>
-                        
-                        <div class="input-group">
-                            <label for="fecha-fin">Hasta:</label>
-                            <input type="date" id="fecha-fin" name="fecha_fin" 
-                                   th:value="${fechaFin}" class="input-estilizado">
-                        </div>
-                    </div>
-                    
-                    <div th:unless="${(modoFecha != null) ? (modoFecha == 'rango') : true}">
-                        <div class="input-group">
-                            <label for="fecha-unica">Día:</label>
-                            <input type="date" id="fecha-unica" name="fecha_unica" 
-                                   th:value="${fechaUnica}" class="input-estilizado">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="fila-formulario">
-                    <button type="submit" class="btn-consulta">Consultar</button>
-                </div>
-            </form>
-
-            <div class="resultados-consulta">
-                <div th:if="${fichaId != null and (fechaInicio != null or fechaUnica != null)}">
-                    <div th:if="${not #lists.isEmpty(resultados)}">
-                        <div class="tabla-container" id="tabla-consulta-container" style="display: block !important;">
-                            <h3>
-                                Resultados para Ficha: 
-                                <span th:text="${(fichaSeleccionada != null and fichaSeleccionada.numeroFicha != null and not fichaSeleccionada.numeroFicha.isEmpty()) ? fichaSeleccionada.numeroFicha : 'Sin número'}"></span>
-                                <span th:if="${fichaSeleccionada != null and fichaSeleccionada.programa != null and fichaSeleccionada.programa.nombrePrograma != null}">
-                                    - <span th:text="${fichaSeleccionada.programa.nombrePrograma}"></span>
-                                </span>
-                            </h3>
-                            
-                            <table class="tabla-consulta" style="width: 100%; border-collapse: collapse;">
-                                <thead>
-                                    <tr>
-                                        <th style="padding: 12px; background: #007bff; color: white;">Documento</th>
-                                        <th style="padding: 12px; background: #007bff; color: white;">Nombre</th>
-                                        <th style="padding: 12px; background: #007bff; color: white;">Apellidos</th>
-                                        <th style="padding: 12px; background: #007bff; color: white;">Correo</th>
-                                        <th th:each="fecha : ${fechasConRegistros}" 
-                                            style="padding: 12px; background: #007bff; color: white;"
-                                            th:text="${#temporals.format(fecha, 'dd/MM/yyyy')}">
-                                        </th>
-                                        <th style="padding: 12px; background: #007bff; color: white;">Asistencia Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="usuarioData : ${resultados}">
-                                        <td style="padding: 10px; border: 1px solid #dee2e6;"
-                                            th:text="${usuarioData.usuario.cedula}"></td>
-                                        <td style="padding: 10px; border: 1px solid #dee2e6;"
-                                            th:text="${usuarioData.usuario.nombre}"></td>
-                                        <td style="padding: 10px; border: 1px solid #dee2e6;"
-                                            th:text="${usuarioData.usuario.apellido}"></td>
-                                        <td style="padding: 10px; border: 1px solid #dee2e6;"
-                                            th:text="${usuarioData.usuario.correo}"></td>
-                                        
-                                        <!-- Celdas de asistencias -->
-                                        <td th:each="fecha : ${fechasConRegistros}" style="padding: 0; border: 1px solid #dee2e6;">
-                                            <div th:if="${usuarioData.asistencias[fecha.toString()] != null}">
-                                                <div th:switch="${usuarioData.asistencias[fecha.toString()].estadoAsistencia}">
-                                                    <div th:case="'Asistio'" 
-                                                         style="padding: 10px; background: #0df643ff; color: #155724; text-align: center; font-weight: bold;">
-                                                        ✓
-                                                    </div>
-                                                    <div th:case="'Inasistio'" 
-                                                         style="padding: 10px; background: #ff0015ff; color: #721c24; text-align: center; font-weight: bold;">
-                                                        ✗
-                                                    </div>
-                                                    <div th:case="'Justificado'" 
-                                                         style="padding: 10px; background: #ffc400ff; color: #856404; text-align: center; font-weight: bold;">
-                                                        J
-                                                    </div>
-                                                    <div th:case="*" 
-                                                         style="padding: 10px; background: #ffffff; color: #6c757d; text-align: center; font-weight: bold;">
-                                                        ?
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div th:unless="${usuarioData.asistencias[fecha.toString()] != null}"
-                                                 style="padding: 10px; background: #ffffff; color: #6c757d; text-align: center; font-weight: bold;">
-                                                -
-                                            </div>
-                                        </td>
-                                        
-                                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center; background: #e8f5e8; font-weight: bold;"
-                                            th:text="${usuarioData.totalAsistencias}">
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    
-                    <div th:unless="${not #lists.isEmpty(resultados)}" class="mensaje-vacio">
-                        <p>No se encontraron registros de asistencia para los filtros seleccionados.</p>
-                    </div>
-                </div>
-                
-                <div th:unless="${fichaId != null and (fechaInicio != null or fechaUnica != null)}" 
-                     id="mensaje-vacio" class="mensaje-vacio">
-                    <p>Seleccione una ficha y fechas para ver los registros de asistencia</p>
+                <div class="input-group">
+                    <label for="modo-fecha">Ver por:</label>
+                    <select id="modo-fecha" name="modo_fecha" class="input-estilizado" onchange="this.form.submit()">
+                        <option value="rango" th:selected="${(modoFecha != null) ? (modoFecha == 'rango') : true}">Rango de fechas</option>
+                        <option value="dia" th:selected="${modoFecha == 'dia'}">Día específico</option>
+                    </select>
                 </div>
             </div>
-        </section>
 
-        <script th:inline="javascript">
+            <div class="fila-formulario">
+                <div th:if="${(modoFecha != null) ? (modoFecha == 'rango') : true}">
+                    <div class="input-group">
+                        <label for="fecha-inicio">Desde:</label>
+                        <input type="date" id="fecha-inicio" name="fecha_inicio"
+                               th:value="${fechaInicio}" class="input-estilizado">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="fecha-fin">Hasta:</label>
+                        <input type="date" id="fecha-fin" name="fecha_fin"
+                               th:value="${fechaFin}" class="input-estilizado">
+                    </div>
+                </div>
+
+                <div th:unless="${(modoFecha != null) ? (modoFecha == 'rango') : true}">
+                    <div class="input-group">
+                        <label for="fecha-unica">Día:</label>
+                        <input type="date" id="fecha-unica" name="fecha_unica"
+                               th:value="${fechaUnica}" class="input-estilizado">
+                    </div>
+                </div>
+            </div>
+
+            <div class="fila-formulario">
+                <button type="submit" class="btn-consulta">Consultar</button>
+            </div>
+        </form>
+
+        <div class="resultados-consulta">
+            <div th:if="${fichaId != null and (fechaInicio != null or fechaUnica != null)}">
+                <div th:if="${not #lists.isEmpty(resultados)}">
+                    <div class="tabla-container" id="tabla-consulta-container" style="display: block !important;">
+                        <h3>
+                            Resultados para Ficha:
+                            <span th:text="${(fichaSeleccionada != null and fichaSeleccionada.numeroFicha != null and not fichaSeleccionada.numeroFicha.isEmpty()) ? fichaSeleccionada.numeroFicha : 'Sin número'}"></span>
+                            <span th:if="${fichaSeleccionada != null and fichaSeleccionada.programa != null and fichaSeleccionada.programa.nombrePrograma != null}">
+                                    - <span th:text="${fichaSeleccionada.programa.nombrePrograma}"></span>
+                                </span>
+                        </h3>
+
+                        <table class="tabla-consulta" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                            <tr>
+                                <th style="padding: 12px; background: #007bff; color: white;">Documento</th>
+                                <th style="padding: 12px; background: #007bff; color: white;">Nombre</th>
+                                <th style="padding: 12px; background: #007bff; color: white;">Apellidos</th>
+                                <th style="padding: 12px; background: #007bff; color: white;">Correo</th>
+                                <th th:each="fecha : ${fechasConRegistros}"
+                                    style="padding: 12px; background: #007bff; color: white;"
+                                    th:text="${#temporals.format(fecha, 'dd/MM/yyyy')}">
+                                </th>
+                                <th style="padding: 12px; background: #007bff; color: white;">Asistencia Total</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="usuarioData : ${resultados}">
+                                <td style="padding: 10px; border: 1px solid #dee2e6;"
+                                    th:text="${usuarioData.usuario.cedula}"></td>
+                                <td style="padding: 10px; border: 1px solid #dee2e6;"
+                                    th:text="${usuarioData.usuario.nombre}"></td>
+                                <td style="padding: 10px; border: 1px solid #dee2e6;"
+                                    th:text="${usuarioData.usuario.apellido}"></td>
+                                <td style="padding: 10px; border: 1px solid #dee2e6;"
+                                    th:text="${usuarioData.usuario.correo}"></td>
+
+                                <!-- Celdas de asistencias -->
+                                <td th:each="fecha : ${fechasConRegistros}" style="padding: 0; border: 1px solid #dee2e6;">
+                                    <div th:if="${usuarioData.asistencias[fecha.toString()] != null}">
+                                        <div th:switch="${usuarioData.asistencias[fecha.toString()].estadoAsistencia}">
+                                            <div th:case="'Asistio'"
+                                                 style="padding: 10px; background: #0df643ff; color: #155724; text-align: center; font-weight: bold;">
+                                                ✓
+                                            </div>
+                                            <div th:case="'Inasistio'"
+                                                 style="padding: 10px; background: #ff0015ff; color: #721c24; text-align: center; font-weight: bold;">
+                                                ✗
+                                            </div>
+                                            <div th:case="'Justificado'"
+                                                 style="padding: 10px; background: #ffc400ff; color: #856404; text-align: center; font-weight: bold;">
+                                                J
+                                            </div>
+                                            <div th:case="*"
+                                                 style="padding: 10px; background: #ffffff; color: #6c757d; text-align: center; font-weight: bold;">
+                                                ?
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div th:unless="${usuarioData.asistencias[fecha.toString()] != null}"
+                                         style="padding: 10px; background: #ffffff; color: #6c757d; text-align: center; font-weight: bold;">
+                                        -
+                                    </div>
+                                </td>
+
+                                <td style="padding: 10px; border: 1px solid #dee2e6; text-align: center; background: #e8f5e8; font-weight: bold;"
+                                    th:text="${usuarioData.totalAsistencias}">
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div th:unless="${not #lists.isEmpty(resultados)}" class="mensaje-vacio">
+                    <p>No se encontraron registros de asistencia para los filtros seleccionados.</p>
+                </div>
+            </div>
+
+            <div th:unless="${fichaId != null and (fechaInicio != null or fechaUnica != null)}"
+                 id="mensaje-vacio" class="mensaje-vacio">
+                <p>Seleccione una ficha y fechas para ver los registros de asistencia</p>
+            </div>
+        </div>
+    </section>
+
+    <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function() {
             const rows = document.querySelectorAll('.tabla-consulta tbody tr');
 
@@ -202,7 +203,7 @@
                 });
             });
         });
-        </script>
-    </div>
+    </script>
+</div>
 </body>
 </html>

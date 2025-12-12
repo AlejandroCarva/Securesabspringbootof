@@ -8,37 +8,50 @@ import java.time.LocalDate;
 public class AsistenciaAmbiente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // ✅ AGREGAR
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_asistencia_ambiente")
     private Integer id;
 
-    // ✅ CORREGIR: Relación con USUARIO (aprendiz)
-    @ManyToOne(fetch = FetchType.LAZY)
+    private LocalDate fecha;
+
+    @Column(name = "estado_asistencia")
+    private String estado;
+
+    @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
-    // ✅ CORREGIR: Relación con INSTRUCTOR 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_instructor")
     private Usuario instructor;
 
-    // ✅ CORREGIR: Relación con COMPETENCIA (sin insertable=false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_competencia")
     private Competencia competencia;
 
-    private LocalDate fecha; // ✅ CAMBIAR Date por LocalDate
-
-    @Column(name = "estado_asistencia")
-    private String estadoAsistencia;
-
-    // Getters y Setters
+    // GETTERS Y SETTERS
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 
     public Usuario getUsuario() {
@@ -63,21 +76,5 @@ public class AsistenciaAmbiente {
 
     public void setCompetencia(Competencia competencia) {
         this.competencia = competencia;
-    }
-
-    public LocalDate getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
-    }
-
-    public String getEstadoAsistencia() {
-        return estadoAsistencia;
-    }
-
-    public void setEstadoAsistencia(String estadoAsistencia) {
-        this.estadoAsistencia = estadoAsistencia;
     }
 }

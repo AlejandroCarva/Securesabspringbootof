@@ -2,6 +2,7 @@ package com.tallerjava.taller.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import java.util.List;
 
 @Data
 @Entity
@@ -18,9 +19,13 @@ public class Competencia {
     
     private String descripcion;
     
-    @Column(name = "id_programa")
-    private Integer idPrograma;
-    
+    @ManyToOne
+    @JoinColumn(name = "id_programa")
+    private Programa programa;
+
+    @OneToMany(mappedBy = "competencia", fetch = FetchType.LAZY)
+    private List<AsistenciaAmbiente> asistencias;
+
     @Column(name = "estado")
     private String estado = "ACTIVA";
 }

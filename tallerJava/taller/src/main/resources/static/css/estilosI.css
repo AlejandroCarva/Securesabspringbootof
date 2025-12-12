@@ -35,8 +35,8 @@ body {
 .menu-toggle {
   display: flex;
   position: fixed;
-  top: 20px;
-  left: 10px;
+  top: 15px;
+  left: 15px;
   z-index: 1001;
   cursor: pointer;
   background: var(--main-green);
@@ -60,9 +60,14 @@ body {
   background: #004d00;
 }
 
+/* Ajuste cuando el sidebar está cerrado */
+body.menu-closed .menu-toggle {
+  left: 15px;
+}
+
 /* --- Sidebar --- */
 .sidebar {
-  width: 290px;
+  width: 250px;
   transform: translateX(0);
   transition: transform 0.3s ease-in-out;
   position: fixed;
@@ -197,7 +202,7 @@ body.menu-closed .main-content-wrapper {
   display: none;
 }
 
-.user-dropdown.show {
+.user-dropdown.active {
   display: block;
 }
 

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="es"
+      layout:decorate="~{layouts/mainV}">
+
+<head>
+    <meta charset="UTF-8">
+    <title layout:fragment="title">Historial de Registros - Vigilante</title>
+
+    <th:block layout:fragment="extraHead">
+        <!-- CSS adicional si quieres -->
+    </th:block>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <h2>Historial de Registros</h2>
+
+    <p style="margin: 15px 0; color: #666; font-size: 14px;">
+        <i class="fa-solid fa-calendar-days"></i>
+        <strong>Fecha actual:</strong>
+        <span th:text="${fechaHoy}"></span>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <i class="fa-solid fa-clock"></i>
+        <strong>Hora actual:</strong>
+        <span th:text="${horaAhora}"></span>
+    </p>
+
+    <hr style="margin: 20px 0; border: none; border-top: 1px solid #e0e0e0;">
+
+    <div class="alerta alerta-exito" th:if="${success != null}">
+        <i class="fa-solid fa-circle-check"></i>
+        <span th:text="${success}"></span>
+    </div>
+
+    <!-- FILTROS -->
+    <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+                padding: 25px; border-radius: 12px; border: 2px solid #00b894;
+                box-shadow: 0 4px 12px rgba(0, 184, 148, 0.1); margin-bottom: 25px;">
+        <h3 style="margin-top: 0; margin-bottom: 20px; color: #00b894;
+                   padding-bottom: 15px; border-bottom: 3px solid #00b894;">
+            <i class="fa-solid fa-filter"></i> Filtros de Búsqueda
+        </h3>
+
+        <form th:action="@{/vigilante/historial-registro}" method="get"
+              style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                     gap: 15px; align-items: end;">
+
+            <div>
+                <label for="nombre"
+                       style="display: block; font-weight: 700; margin-bottom: 6px;
+                              color: #222; font-size: 13px;">Nombre o Apellido</label>
+                <input type="text" id="nombre" name="nombre"
+                       th:value="${filtroNombre}"
+                       placeholder="Buscar por nombre..."
+                       style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0;
+                              border-radius: 8px; font-size: 14px; transition: all 0.3s ease;">
+            </div>
+
+            <div>
+                <label for="cedula"
+                       style="display: block; font-weight: 700; margin-bottom: 6px;
+                              color: #222; font-size: 13px;">Cédula</label>
+                <input type="text" id="cedula" name="cedula"
+                       th:value="${filtroCedula}"
+                       placeholder="Buscar por cédula..."
+                       style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0;
+                              border-radius: 8px; font-size: 14px; transition: all 0.3s ease;">
+            </div>
+
+            <div>
+                <label for="tipo"
+                       style="display: block; font-weight: 700; margin-bottom: 6px;
+                              color: #222; font-size: 13px;">Tipo de Registro</label>
+                <select id="tipo" name="tipo"
+                        style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0;
+                               border-radius: 8px; font-size: 14px; transition: all 0.3s ease;">
+                    <option value="">Todos</option>
+                    <option value="Visitante" th:selected="${filtroTipo == 'Visitante'}">Visitante</option>
+                    <option value="Manual" th:selected="${filtroTipo == 'Manual'}">Registro Manual</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="fechaDesde"
+                       style="display: block; font-weight: 700; margin-bottom: 6px;
+                              color: #222; font-size: 13px;">Fecha Desde</label>
+                <input type="date" id="fechaDesde" name="fechaDesde"
+                       th:value="${filtroFechaDesde}"
+                       style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0;
+                              border-radius: 8px; font-size: 14px; transition: all 0.3s ease;">
+            </div>
+
+            <div>
+                <label for="fechaHasta"
+                       style="display: block; font-weight: 700; margin-bottom: 6px;
+                              color: #222; font-size: 13px;">Fecha Hasta</label>
+                <input type="date" id="fechaHasta" name="fechaHasta"
+                       th:value="${filtroFechaHasta}"
+                       style="width: 100%; padding: 12px 15px; border: 2px solid #e0e0e0;
+                              border-radius: 8px; font-size: 14px; transition: all 0.3s ease;">
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn primary-btn" style="flex: 1;">
+                    <i class="fa-solid fa-magnifying-glass"></i> Buscar
+                </button>
+                <a th:href="@{/vigilante/historial-registro}"
+                   style="flex: 1;" class="btn">
+                    <i class="fa-solid fa-rotate-right"></i> Limpiar
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- TABLA UNIFICADA -->
+    <div th:if="${(visitantes != null && !#lists.isEmpty(visitantes)) || (registrosManual != null && !#lists.isEmpty(registrosManual))}">
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Cédula</th>
+                    <th>Tipo</th>
+                    <th>Motivo</th>
+                    <th>Fecha</th>
+                    <th>Hora Entrada</th>
+                    <th>Hora Salida</th>
+                    <th>Estado</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Visitantes -->
+                <tr th:each="v : ${visitantes}">
+                    <td th:text="${v.nombre}">-</td>
+                    <td th:text="${v.apellido}">-</td>
+                    <td th:text="${v.cedula}">-</td>
+                    <td style="font-weight: bold; color: #28a745;">
+                        <i class="fa-solid fa-user-tie"></i> Visitante
+                    </td>
+                    <td th:text="${v.motivo}">-</td>
+                    <td th:text="${v.asistenciaSede != null ? v.asistenciaSede.fecha : '-'}">-</td>
+                    <td th:text="${v.asistenciaSede != null ? v.asistenciaSede.horaEntrada : '-'}">-</td>
+                    <td th:text="${v.asistenciaSede != null && v.asistenciaSede.horaSalida != null ? v.asistenciaSede.horaSalida : '---'}">-</td>
+                    <td>
+                        <span th:if="${v.asistenciaSede != null && v.asistenciaSede.horaSalida == null}"
+                              style="background-color: #28a745; color: white; padding: 5px 10px;
+                                     border-radius: 4px; display: inline-block;">
+                            <i class="fa-solid fa-arrow-right"></i> Dentro de la instalación
+                        </span>
+                        <span th:unless="${v.asistenciaSede != null && v.asistenciaSede.horaSalida == null}"
+                              style="background-color: #dc3545; color: white; padding: 5px 10px;
+                                     border-radius: 4px; display: inline-block;">
+                            <i class="fa-solid fa-arrow-left"></i> Fuera de la instalación
+                        </span>
+                    </td>
+                </tr>
+
+                <!-- Registros Manuales -->
+                <tr th:each="r : ${registrosManual}">
+                    <td th:text="${r.nombre}">-</td>
+                    <td th:text="${r.apellido}">-</td>
+                    <td th:text="${r.documento}">-</td>
+                    <td style="font-weight: bold; color: #007bff;">
+                        <i class="fa-solid fa-users"></i> Registro Manual
+                    </td>
+                    <td th:text="${r.motivo != null ? r.motivo : '-'}">-</td>
+                    <td th:text="${r.fecha}">-</td>
+                    <td th:text="${r.horaEntrada != null ? r.horaEntrada : '-'}">-</td>
+                    <td th:text="${r.horaSalida != null ? r.horaSalida : '-'}">-</td>
+                    <td>
+                        <span th:if="${r.tipoMovimiento == 'Completo' && r.horaSalida != null}"
+                              style="background-color: #dc3545; color: white; padding: 5px 10px;
+                                     border-radius: 4px; display: inline-block;">
+                            <i class="fa-solid fa-arrow-left"></i> Fuera de la instalación
+                        </span>
+                        <span th:if="${r.tipoMovimiento == 'Completo' && r.horaSalida == null}"
+                              style="background-color: #28a745; color: white; padding: 5px 10px;
+                                     border-radius: 4px; display: inline-block;">
+                            <i class="fa-solid fa-arrow-right"></i> Dentro de la instalación
+                        </span>
+                        <span th:if="${r.tipoMovimiento == 'Ingreso'}"
+                              style="background-color: #28a745; color: white; padding: 5px 10px;
+                                     border-radius: 4px; display: inline-block;">
+                            <i class="fa-solid fa-arrow-right"></i> Dentro de la instalación
+                        </span>
+                        <span th:if="${r.tipoMovimiento == 'Salida'}"
+                              style="background-color: #dc3545; color: white; padding: 5px 10px;
+                                     border-radius: 4px; display: inline-block;">
+                            <i class="fa-solid fa-arrow-left"></i> Fuera de la instalación
+                        </span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- NO HAY DATOS -->
+    <div th:if="${(visitantes == null || #lists.isEmpty(visitantes)) && (registrosManual == null || #lists.isEmpty(registrosManual))}"
+         class="no-data-message">
+        <i class="fa-solid fa-inbox" style="font-size: 32px; color: #ccc; margin-bottom: 10px;"></i><br>
+        <strong>No hay registros</strong><br>
+        <a th:href="@{/vigilante/registrar-invitados}" class="btn primary-btn">
+            <i class="fa-solid fa-user-plus"></i> Registrar Invitado
+        </a>
+    </div>
+
+    <div class="paginacion" th:if="${totalPages > 1}">
+        <a th:each="i : ${pageNumbers}"
+           th:href="@{/vigilante/historial-registro(page=${i})}"
+           th:text="${i + 1}"
+           th:classappend="${i == currentPage} ? ' active' : ''">
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<body th:replace="~{layouts/indexC :: layout(~{::content})}">
+<div th:fragment="content">
+    <section id="asistencia-sede-section" class="content-section" aria-labelledby="asistencia-sede-heading">
+        <h2 id="asistencia-sede-heading">Asistencia en Sede</h2>
+        <div class="filters">
+            <div class="form-group">
+                <label for="asistenciaSedeFicha">Filtrar por Ficha:</label>
+                <select id="asistenciaSedeFicha" name="ficha">
+                    <option value="all">Todas las Fichas</option>
+                    <option th:each="f : ${listaFichas}" th:value="${f.numeroFicha}" th:text="${f.numeroFicha}"></option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="asistenciaSedeDocumento">Filtrar por Documento/Nombre:</label>
+                <input type="text" id="asistenciaSedeDocumento" name="documento" placeholder="Buscar por documento o nombre">
+            </div>
+            <div class="form-group">
+                <label for="asistenciaSedeEstado">Estado:</label>
+                <select id="asistenciaSedeEstado" name="estado">
+                    <option value="all">Todos</option>
+                    <option value="Presente">Presente</option>
+                    <option value="Ausente">Ausente</option>
+                </select>
+            </div>
+            <div class="form-group date-range-group">
+                <label for="asistenciaSedeHoraEntrada">Hora Entrada:</label>
+                <input type="time" id="asistenciaSedeHoraEntrada" name="horaEntrada">
+            </div>
+            <div class="form-group date-range-group">
+                <label for="asistenciaSedeHoraSalida">Hora Salida:</label>
+                <input type="time" id="asistenciaSedeHoraSalida" name="horaSalida">
+            </div>
+        </div>
+        <div class="table-responsive">
+            <div class="table-actions">
+                <button id="applySedeFiltersBtn" class="btn secondary-btn" type="button" style="margin-right:8px;">Aplicar filtros</button>
+                <button id="exportSedeBtn" class="btn primary-btn" type="button">Exportar CSV</button>
+            </div>
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Documento</th>
+                    <th>Nombre Aprendiz</th>
+                    <th>Ficha</th>
+                    <th>Fecha</th>
+                    <th>Hora Entrada</th>
+                    <th>Hora Salida</th>
+                </tr>
+                </thead>
+                <tbody id="asistenciaSedeTabla" data-server="true">
+                <tr th:each="a : ${asistenciasSede}">
+                    <td th:text="${a.usuario != null ? a.usuario.cedula : 'N/D'}"></td>
+                    <td th:text="${a.usuario != null ? (a.usuario.nombre + ' ' + (a.usuario.apellido != null ? a.usuario.apellido : '')) : 'N/D'}"></td>
+                    <td th:text="${a.usuario != null && a.usuario.ficha != null ? a.usuario.ficha.numeroFicha : 'N/D'}"></td>
+                    <td th:text="${a.fecha}"></td>
+                    <td th:text="${a.horaEntrada}"></td>
+                    <td th:text="${a.horaSalida}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Registrar Asistencia UI eliminada (botón y modal removidos) -->
+</div>
+    <script>
+        (function(){
+            const tbody = document.getElementById('asistenciaSedeTabla');
+            const btnApply = document.getElementById('applySedeFiltersBtn');
+            const btnExport = document.getElementById('exportSedeBtn');
+            const selFicha = document.getElementById('asistenciaSedeFicha');
+            const inpDoc = document.getElementById('asistenciaSedeDocumento');
+            const selEstado = document.getElementById('asistenciaSedeEstado');
+            const inpHoraEntrada = document.getElementById('asistenciaSedeHoraEntrada');
+            const inpHoraSalida = document.getElementById('asistenciaSedeHoraSalida');
+
+            if(!tbody) return;
+
+            function timeToSeconds(t){ if(!t) return null; const parts = t.split(':'); if(parts.length<2) return null; return Number(parts[0])*3600 + Number(parts[1])*60 + (parts[2]?Number(parts[2]):0); }
+
+            function rowMatchesFilters(row){
+                const cells = row.querySelectorAll('td');
+                if(!cells || cells.length < 6) return false;
+                const doc = (cells[0].textContent || '').trim().toLowerCase();
+                const nombre = (cells[1].textContent || '').trim().toLowerCase();
+                const ficha = (cells[2].textContent || '').trim();
+                const fechaTxt = (cells[3].textContent || '').trim();
+                const horaEntradaTxt = (cells[4].textContent || '').trim();
+                const horaSalidaTxt = (cells[5].textContent || '').trim();
+
+                if(selFicha && selFicha.value && selFicha.value !== 'all'){
+                    if(ficha !== selFicha.value) return false;
+                }
+                if(inpDoc && inpDoc.value && inpDoc.value.trim() !== ''){
+                    const q = inpDoc.value.trim().toLowerCase();
+                    if(!(doc.indexOf(q) !== -1 || nombre.indexOf(q) !== -1)) return false;
+                }
+                if(selEstado && selEstado.value && selEstado.value !== 'all'){
+                    // estado no está en columna separada en esta vista: inferir por horaSalida/horaEntrada
+                    const estado = (horaEntradaTxt && horaEntradaTxt !== '' && horaEntradaTxt !== 'N/D') ? 'Presente' : 'Ausente';
+                    if(estado !== selEstado.value) return false;
+                }
+
+                // Hora filters (compare seconds)
+                const rowEntradaSec = timeToSeconds(horaEntradaTxt);
+                const rowSalidaSec = timeToSeconds(horaSalidaTxt);
+                if(inpHoraEntrada && inpHoraEntrada.value){
+                    const filterEntradaSec = timeToSeconds(inpHoraEntrada.value);
+                    if(filterEntradaSec != null && rowEntradaSec != null && rowEntradaSec < filterEntradaSec) return false;
+                }
+                if(inpHoraSalida && inpHoraSalida.value){
+                    const filterSalidaSec = timeToSeconds(inpHoraSalida.value);
+                    if(filterSalidaSec != null && rowSalidaSec != null && rowSalidaSec > filterSalidaSec) return false;
+                }
+
+                return true;
+            }
+
+            function applyFilters(){
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+                rows.forEach(r => { if(rowMatchesFilters(r)) r.style.display = ''; else r.style.display = 'none'; });
+            }
+
+            function exportVisibleToCSV(){
+                const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => r.style.display !== 'none');
+                if(!rows.length){ alert('No hay filas para exportar.'); return; }
+                const header = ['Documento','Nombre Aprendiz','Ficha','Fecha','Hora Entrada','Hora Salida'];
+                const csv = [header.join(',')];
+                rows.forEach(r => {
+                    const cols = Array.from(r.querySelectorAll('td')).map(td => '"' + (td.textContent||'').trim().replace(/"/g,'""') + '"');
+                    csv.push(cols.join(','));
+                });
+                const blob = new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a'); a.href = url; a.download = 'asistencia-sede.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+            }
+
+            if(btnApply) btnApply.addEventListener('click', applyFilters);
+            if(btnExport) btnExport.addEventListener('click', exportVisibleToCSV);
+            document.addEventListener('DOMContentLoaded', function(){ applyFilters(); });
+        })();
+    </script>
+</body>
+</html>

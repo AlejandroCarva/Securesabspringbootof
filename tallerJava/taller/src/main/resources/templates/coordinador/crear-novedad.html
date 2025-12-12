@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<body th:replace="~{layouts/indexC :: layout(~{::content})}">
+<div th:fragment="content">
+    <style>
+        /* Asegurar que el overlay tenga blur y transición si Tailwind no lo incluye */
+        .backdrop-blur-sm { backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+        .animate-fade-in { animation: nm-fade-in 200ms ease-out forwards; opacity: 0; }
+        @keyframes nm-fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        /* Modal overlay base (mejor control via JS) */
+        .modal-overlay { display: none; }
+        .modal-overlay.flex { display: flex; }
+        /* FORZAR eliminación de decoraciones grandes (lupa) sólo para esta vista */
+        .content-section::before, .content-section::after { background-image: none !important; background: none !important; }
+        /* Ocultar SVG/IMG decorativos grandes dentro de esta sección */
+        .content-section svg.decorative, .content-section img.decorative { display: none !important; }
+        /* Ajustes visuales específicos para mejorar la apariencia en esta página */
+        #crear-novedad-section .content-section { border-radius: 12px !important; padding: 20px !important; box-shadow: 0 10px 30px rgba(2,6,23,0.06) !important; }
+        /* Menos sombra en la tabla para una apariencia más limpia */
+        .bg-white.rounded-lg.shadow.p-4.mb-6 { box-shadow: 0 6px 18px rgba(2,6,23,0.04) !important; }
+        /* Mejor separación para los controles de filtro */
+        #filtrosPanel { gap: 1rem !important; }
+        /* OCULTAR SVGS DECORATIVOS GRANDES que se insertan como hijos del body o del main */
+        body > svg, .main-content-wrapper > svg { display: none !important; pointer-events: none !important; }
+        /* Desactivar pseudo-elementos y backgrounds dentro de esta sección (quita imágenes decorativas como la lupa grande) */
+        #crear-novedad-section *::before,
+        #crear-novedad-section *::after {
+            background-image: none !important;
+            background: none !important;
+            content: none !important;
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+        /* También desactivar pseudo-elementos grandes aplicados al body o al contenedor principal */
+        body::before, body::after, .main-content-wrapper::before, .main-content-wrapper::after {
+            background-image: none !important;
+            background: none !important;
+            content: none !important;
+            display: none !important;
+            width: 0 !important; height: 0 !important;
+        }
+        /* Ocultar por clase decorativa si existe */
+        .decorative-magnifier, .hero-magnifier { display: none !important; }
+    </style>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+    <section id="crear-novedad-section" class="content-section p-6" aria-labelledby="crear-novedad-heading">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h1 id="crear-novedad-heading" class="text-3xl font-bold text-gray-900">Gestión de Novedades</h1>
+                    <p class="text-gray-600 mt-1">Canal oficial para informar novedades a instructores y aprendices</p>
+                </div>
+                <!-- ✅ SIN onclick: lo manejamos con JS -->
+                <button id="btnNuevaNovedad" type="button" aria-controls="crearNovedadModal" aria-expanded="false"
+                        class="flex items-center gap-2 bg-green-700 hover:bg-green-800 text-white px-5 py-3 rounded-lg font-medium shadow">
+                    Nueva Novedad
+                </button>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-4 mb-6">
+                <div class="flex gap-3">
+                    <div class="flex-1 relative">
+                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <label for="busqueda" class="sr-only">Buscar novedades</label>
+                        <input type="text" id="busqueda" placeholder="Buscar por título, instructor o ficha..." class="w-full pl-10 pr-4 py-2 border rounded-lg" oninput="filtrarNovedades()">
+                    </div>
+                    <button onclick="toggleFiltros()" class="px-4 py-2 border rounded-lg hover:bg-gray-50">Filtros</button>
+                </div>
+
+                <div id="filtrosPanel" class="hidden grid grid-cols-4 gap-4 mt-4 pt-4 border-t">
+                    <div>
+                        <label for="filtroEstado" class="text-sm text-gray-700 block mb-1">Estado</label>
+                        <select id="filtroEstado" name="filtroEstado" onchange="filtrarNovedades()" class="w-full px-3 py-2 border rounded">
+                            <option value="">Todos</option>
+                            <option value="Pendiente">Pendiente</option>
+                            <option value="En proceso">En proceso</option>
+                            <option value="Resuelto">Resuelto</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filtroTipo" class="text-sm text-gray-700 block mb-1">Tipo</label>
+                        <select id="filtroTipo" name="filtroTipo" onchange="filtrarNovedades()" class="w-full px-3 py-2 border rounded">
+                            <option value="">Todos</option>
+                            <option value="Urgente">Urgente</option>
+                            <option value="Incidencia">Incidencia</option>
+                            <option value="Aviso">Aviso</option>
+                            <option value="Comunicado">Comunicado</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filtroInstructor" class="text-sm text-gray-700 block mb-1">Instructor</label>
+                        <select id="filtroInstructor" name="filtroInstructor" onchange="filtrarNovedades()" class="w-full px-3 py-2 border rounded">
+                            <option value="">Todos</option>
+                            <option th:each="u : ${listaInstructores}"
+                                    th:value="${u.apellido != null ? #strings.concat(u.nombre,' ',u.apellido) : u.nombre}"
+                                    th:text="${u.apellido != null ? #strings.concat(u.nombre,' ',u.apellido) : u.nombre}">
+                            </option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="filtroFicha" class="text-sm text-gray-700 block mb-1">Ficha</label>
+                        <input type="text" id="filtroFicha" name="filtroFicha" oninput="filtrarNovedades()" class="w-full px-3 py-2 border rounded" placeholder="Ej: 3065834">
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center mb-3">
+                <p class="text-sm text-gray-600">
+                    Mostrando <span id="novedadesRecientesCount" class="font-semibold"
+                                    th:text="${listaNovedades != null ? listaNovedades.size() : 0}">0</span> novedades
+                </p>
+                <div class="flex gap-3">
+                    <button onclick="exportarExcel()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded">Excel</button>
+                    <button onclick="exportarPDF()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded">PDF</button>
+                    <button onclick="exportarCSV()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">CSV</button>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-green-700 text-white">
+                        <tr>
+                            <th class="px-6 py-3 text-left">Fecha</th>
+                            <th class="px-6 py-3 text-left">Ficha</th>
+                            <th class="px-6 py-3 text-left">Título</th>
+                            <th class="px-6 py-3 text-left">Descripción</th>
+                            <th class="px-6 py-3 text-left">Respuesta</th>
+                            <th class="px-6 py-3 text-left">Instructor</th>
+                            <th class="px-6 py-3 text-left">Estado</th>
+                            <th class="px-6 py-3 text-center">Adjunto</th>
+                            <th class="px-6 py-3 text-center">Acciones</th>
+                        </tr>
+                        </thead>
+                        <tbody id="novedadesRecientesTabla" class="divide-y">
+                        <tr th:if="${listaNovedades == null or #lists.isEmpty(listaNovedades)}">
+                            <td colspan="9" class="p-4 text-center text-gray-500">Aún no se han registrado novedades</td>
+                        </tr>
+                        <tr th:each="n : ${listaNovedades}"
+                            th:attr="data-novedad-id=${n.id},data-ficha-id=${n.ficha != null ? n.ficha.id : ''},data-instructor-id=${n.instructor != null ? n.instructor.idUsuario : ''}"
+                            class="hover:bg-gray-50">
+                            <td class="px-6 py-3" th:text="${n.fecha}">2025-11-27</td>
+                            <td class="px-6 py-3" th:text="${n.ficha != null ? n.ficha.numeroFicha : 'N/A'}">F-000</td>
+                            <td class="px-6 py-3" th:text="${n.titulo}">Título</td>
+                            <td class="px-6 py-3"
+                                style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                                <span th:text="${n.descripcion != null && n.descripcion != '' ? (n.descripcion.length() > 40 ? n.descripcion.substring(0,40) + '...' : n.descripcion) : 'Sin descripción'}">
+                                    Sin descripción
+                                </span>
+                                <div class="hidden descripcion-completa" th:text="${n.descripcion}"></div>
+                            </td>
+                            <td class="px-6 py-3"
+                                style="max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                                <span th:text="${n.respuesta != null && n.respuesta != '' ? (n.respuesta.length() > 40 ? n.respuesta.substring(0,40) + '...' : n.respuesta) : 'Sin respuesta'}">
+                                    Sin respuesta
+                                </span>
+                                <div class="hidden respuesta-completa" th:text="${n.respuesta}"></div>
+                            </td>
+                            <td class="px-6 py-3"
+                                th:text="${n.instructor != null ? (n.instructor.apellido != null ? #strings.concat(n.instructor.nombre,' ',n.instructor.apellido) : n.instructor.nombre) : 'N/A'}">
+                                Nombre Apellido
+                            </td>
+                            <td class="px-6 py-3" th:text="${n.estado}">Pendiente</td>
+                            <td class="px-6 py-3 text-center">
+                                <span th:if="${n.archivoAdjunto != null and n.archivoAdjunto != ''}">
+                                    <a th:href="@{/coordinador/novedades/archivo/{f}(f=${n.archivoAdjunto})}"
+                                       target="_blank" class="text-blue-600 hover:underline">Adjunto</a>
+                                </span>
+                                <span th:unless="${n.archivoAdjunto != null and n.archivoAdjunto != ''}">-</span>
+                            </td>
+                            <td class="px-6 py-3" style="display:none;"
+                                th:text="${n.tipo != null ? n.tipo : 'Comunicado'}" data-tipo="tipo">Comunicado</td>
+                            <td class="px-6 py-3 text-center">
+                                <div class="flex justify-center gap-2">
+                                    <button type="button"
+                                            class="btnVerDetalle p-2 text-blue-600 hover:bg-blue-50 rounded"
+                                            title="Ver detalle"
+                                            th:attr="data-id=${n.id}">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </button>
+                                    <button type="button"
+                                            class="btnEditarNovedad p-2 text-green-600 hover:bg-green-50 rounded"
+                                            title="Editar"
+                                            th:attr="data-id=${n.id}">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                    </button>
+                                    <form th:action="@{/coordinador/novedades/eliminar}" method="post"
+                                          style="display:inline;">
+                                        <input type="hidden" name="id" th:value="${n.id}"/>
+                                        <button type="submit"
+                                                class="p-2 text-red-600 hover:bg-red-50 rounded"
+                                                title="Eliminar"
+                                                onclick="return confirm('¿Seguro que desea eliminar esta novedad?');">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Modal respuesta / detalle -->
+            <div id="responseModal"
+                 class="hidden fixed inset-0 bg-black bg-opacity-10 backdrop-blur-md modal-overlay items-center justify-center z-40 transition-opacity duration-200"
+                 style="padding: 3rem 2rem 2rem 2rem;">
+                <div class="bg-white rounded-xl w-full max-w-2xl shadow-2xl animate-fade-in"
+                     style="max-height: 80vh; display: flex; flex-direction: column;">
+                    <div class="flex justify-between items-center p-4 border-b bg-gradient-to-r from-green-50 to-emerald-50"
+                         style="flex-shrink: 0;">
+                        <h3 class="text-xl font-bold text-gray-900">Detalle de Novedad</h3>
+                        <!-- ✅ SIN onclick, solo id -->
+                        <button id="btnCloseResponseModal" type="button"
+                                class="text-gray-400 hover:text-gray-600 text-2xl font-bold">
+                            &times;
+                        </button>
+                    </div>
+                    <div id="responseModalContent" class="p-4"
+                         style="overflow-y: auto; flex: 1;">
+                        <div class="text-center text-gray-600">Seleccione "Ver detalle" en una novedad para ver su información aquí.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal editar novedad -->
+            <div id="editarNovedadModal"
+                 class="hidden fixed inset-0 bg-black bg-opacity-10 backdrop-blur-md modal-overlay items-center justify-center z-40 transition-opacity duration-200"
+                 style="padding: 3rem 2rem 2rem 2rem;">
+                <div class="bg-white rounded-xl w-full max-w-2xl shadow-2xl animate-fade-in"
+                     style="max-height: 80vh; display: flex; flex-direction: column;">
+                    <div class="flex justify-between items-center p-4 border-b bg-gradient-to-r from-green-50 to-emerald-50"
+                         style="flex-shrink: 0;">
+                        <h3 class="text-xl font-bold text-gray-900">Editar Novedad</h3>
+                        <!-- ✅ SIN onclick, solo id -->
+                        <button id="btnCloseEditarNovedad" type="button"
+                                class="text-gray-400 hover:text-gray-600 text-2xl font-bold">
+                            &times;
+                        </button>
+                    </div>
+                    <div id="editarNovedadContent" class="p-4"
+                         style="overflow-y: auto; flex: 1;">
+                        <div class="text-center text-gray-600">Seleccione "Editar" en una novedad para abrir el formulario de edición.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal crear/editar (servidor-side) -->
+            <div id="crearNovedadModal"
+                 class="hidden fixed inset-0 bg-black bg-opacity-10 backdrop-blur-md modal-overlay items-center justify-center p-6 z-40 transition-opacity duration-200">
+                <div class="bg-white rounded-xl w-full max-w-2xl overflow-y-auto mx-auto mt-28 mb-12 animate-fade-in">
+                    <div class="flex justify-between items-center p-6 border-b">
+                        <h3 id="crearNovedadTitle" class="text-xl font-bold">Nueva Novedad</h3>
+                        <!-- ✅ ya estaba con id, sin onclick -->
+                        <button id="btnCloseCrearNovedad" type="button"
+                                class="text-gray-600" aria-label="Cerrar formulario de crear novedad">
+                            &times;
+                        </button>
+                    </div>
+                    <div class="p-6">
+                        <form id="formCrearNovedad"
+                              th:action="@{/coordinador/novedades/guardar}"
+                              th:object="${novedad}"
+                              method="post" enctype="multipart/form-data"
+                              class="space-y-4">
+                            <div>
+                                <label for="novedadFicha" class="block text-sm">Ficha afectada <span class="text-red-500">*</span></label>
+                                <select id="novedadFicha" name="fichaId" required
+                                        class="w-full px-3 py-2 border rounded">
+                                    <option value="">Seleccione la ficha</option>
+                                    <option th:each="f : ${listaFichas}"
+                                            th:value="${f.id}"
+                                            th:text="${f.numeroFicha}"></option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="novedadInstructor" class="block text-sm">Instructor responsable <span class="text-red-500">*</span></label>
+                                <select id="novedadInstructor" name="instructorId" required
+                                        class="w-full px-3 py-2 border rounded">
+                                    <option value="">Seleccione un instructor</option>
+                                    <option th:each="u : ${listaInstructores}"
+                                            th:value="${u.idUsuario}"
+                                            th:text="${u.apellido != null ? #strings.concat(u.nombre,' ',u.apellido) : u.nombre}"></option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="novedadTipo" class="block text-sm">Tipo de novedad</label>
+                                <select id="novedadTipo" name="tipo"
+                                        class="w-full px-3 py-2 border rounded">
+                                    <option value="Comunicado">Comunicado</option>
+                                    <option value="Seguimiento">Seguimiento</option>
+                                    <option value="Alerta">Alerta</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="novedadTitulo" class="block text-sm">Título / asunto <span class="text-red-500">*</span></label>
+                                <input id="novedadTitulo" name="titulo" type="text" required
+                                       class="w-full px-3 py-2 border rounded"/>
+                            </div>
+                            <div>
+                                <label for="novedadDescripcion" class="block text-sm">Descripción detallada <span class="text-red-500">*</span></label>
+                                <textarea id="novedadDescripcion" name="descripcion"
+                                          rows="5" required
+                                          class="w-full px-3 py-2 border rounded"></textarea>
+                            </div>
+                            <div>
+                                <label for="archivoAdjunto" class="block text-sm">Adjunto (opcional)</label>
+                                <div class="flex items-center gap-3">
+                                    <input type="file" name="archivo" id="archivoAdjunto" class="w-full"/>
+                                    <span id="nombreArchivo" class="text-sm text-gray-600"></span>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 justify-end pt-4 border-t">
+                                <button id="btnCancelarNovedad" type="button"
+                                        class="px-4 py-2 border rounded">
+                                    Cancelar
+                                </button>
+                                <button id="btnRegistrarNovedad" type="submit"
+                                        class="px-4 py-2 bg-green-700 text-white rounded">
+                                    Registrar novedad
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

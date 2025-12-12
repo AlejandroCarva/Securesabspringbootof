@@ -24,8 +24,8 @@ public class AprendizAsistenciaServiceImpl implements IAprendizAsistenciaService
             System.out.println("? Filtros - competencia: " + competencia + ", fecha: " + fecha);
             
             // ✅ OBTENER DATOS REALES de la base de datos
-            List<AsistenciaAmbiente> asistenciasEntities = asistenciaRepository.findByUsuarioIdUsuario(usuarioId.longValue());
-            
+            List<AsistenciaAmbiente> asistenciasEntities = asistenciaRepository.findByUsuarioIdUsuario(usuarioId);
+
             System.out.println("? Asistencias encontradas en BD: " + asistenciasEntities.size());
             
             // Convertir entidades a DTOs
@@ -38,7 +38,7 @@ public class AprendizAsistenciaServiceImpl implements IAprendizAsistenciaService
                     asistencia.getCompetencia() != null ? asistencia.getCompetencia().getNombreCompetencia() : "N/A",
                     asistencia.getInstructor() != null ? 
                         asistencia.getInstructor().getNombre() + " " + asistencia.getInstructor().getApellido() : "N/A",
-                    asistencia.getEstadoAsistencia() != null ? asistencia.getEstadoAsistencia() : "N/A"
+                    asistencia.getEstado() != null ? asistencia.getEstado() : "N/A"
                 );
                 asistenciasDTO.add(dto);
             }
@@ -90,8 +90,8 @@ public class AprendizAsistenciaServiceImpl implements IAprendizAsistenciaService
             System.out.println("? SERVICE - Obteniendo asistencias para aprendiz ID: " + usuarioId);
             
             // ✅ OBTENER DATOS REALES
-            List<AsistenciaAmbiente> asistenciasEntities = asistenciaRepository.findByUsuarioIdUsuario(usuarioId.longValue());
-            
+            List<AsistenciaAmbiente> asistenciasEntities = asistenciaRepository.findByUsuarioIdUsuario(usuarioId);
+
             System.out.println("? Asistencias encontradas: " + asistenciasEntities.size());
             
             // Convertir entidades a DTOs
@@ -103,7 +103,7 @@ public class AprendizAsistenciaServiceImpl implements IAprendizAsistenciaService
                     asistencia.getCompetencia() != null ? asistencia.getCompetencia().getNombreCompetencia() : "N/A",
                     asistencia.getInstructor() != null ? 
                         asistencia.getInstructor().getNombre() + " " + asistencia.getInstructor().getApellido() : "N/A",
-                    asistencia.getEstadoAsistencia() != null ? asistencia.getEstadoAsistencia() : "N/A"
+                    asistencia.getEstado() != null ? asistencia.getEstado() : "N/A"
                 );
                 asistenciasDTO.add(dto);
             }

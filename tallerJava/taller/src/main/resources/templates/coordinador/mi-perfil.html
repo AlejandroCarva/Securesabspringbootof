@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<body th:replace="~{layouts/indexC :: layout(~{::content})}">
+<div th:fragment="content">
+    <section id="perfil-section" class="content-section active-section" aria-labelledby="perfil-heading">
+        <h2 id="perfil-heading">Mi Perfil</h2>
+
+        <div class="profile-details">
+            <div class="profile-info-group">
+                <p><strong>Nombre Completo:</strong> <span id="miPerfilNombre" th:text="${usuarioCoordinador != null ? (usuarioCoordinador.nombre + ' ' + usuarioCoordinador.apellido) : ''}"></span></p>
+                <p><strong>Correo Electrónico:</strong> <span id="miPerfilEmail" th:text="${usuarioCoordinador != null ? usuarioCoordinador.correo : ''}"></span></p>
+            </div>
+
+            <div class="profile-info-group">
+                <p><strong>Rol:</strong> <span id="miPerfilRol" th:text="${usuarioCoordinador != null && usuarioCoordinador.roles != null && !#lists.isEmpty(usuarioCoordinador.roles) ? usuarioCoordinador.roles.get(0).name : ''}"></span></p>
+                <p><strong>Ficha:</strong> <span id="miPerfilFicha" th:text="${usuarioCoordinador != null && usuarioCoordinador.ficha != null ? usuarioCoordinador.ficha.numeroFicha : ''}"></span></p>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <button class="btn primary-btn" id="miPerfilEditarBtn">Editar Perfil</button>
+        </div>
+
+    </section>
+</div>
+
+</body>
+</html>

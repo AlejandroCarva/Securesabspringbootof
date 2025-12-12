@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      lang="es"
+      layout:decorate="~{layouts/mainV}">
+
+<head>
+    <meta charset="UTF-8">
+    <title layout:fragment="title">Registro Manual de Ingreso/Salida</title>
+
+    <th:block layout:fragment="extraHead">
+        <!-- CSS adicional si quieres para esta vista -->
+        <!-- Por ejemplo:
+        <link rel="stylesheet" th:href="@{/css/registro-manual.css}">
+        -->
+    </th:block>
+</head>
+
+<body>
+
+<div layout:fragment="content" class="registro-manual-page">
+
+    <!-- MENSAJE DE ÉXITO -->
+    <div class="alerta alerta-exito" th:if="${success != null}">
+        <i class="fa-solid fa-circle-check"></i>
+        <span th:text="${success}"></span>
+    </div>
+
+    <!-- CABECERA -->
+    <div class="rm-header">
+        <div>
+            <h2>Registro Manual de Ingreso/Salida</h2>
+            <p>Registra manualmente el ingreso o salida de una persona y revisa el historial reciente.</p>
+        </div>
+        <div class="rm-header-info">
+            <div class="rm-pill">
+                <i class="fa-solid fa-calendar-day"></i>
+                <span th:text="${fechaHoy}">2025-12-11</span>
+            </div>
+            <div class="rm-pill">
+                <i class="fa-solid fa-clock"></i>
+                <span th:text="${horaAhora}">13:45:00</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD FORMULARIO -->
+    <div class="rm-card">
+        <div class="rm-card-header">
+            <div>
+                <h3><i class="fa-solid fa-pen-to-square"></i> Nuevo movimiento</h3>
+                <p>Completa los datos del documento, tipo de movimiento y motivo.</p>
+            </div>
+        </div>
+
+        <form th:action="@{/vigilante/registro-manual}"
+              th:object="${registroManualForm}"
+              method="post">
+
+            <!-- CÉDULA + MOVIMIENTO -->
+            <div class="rm-row">
+                <div class="rm-field rm-field-grow">
+                    <label for="cedula">Cédula</label>
+                    <input type="text"
+                           id="cedula"
+                           class="rm-input"
+                           th:field="*{documento}"
+                           placeholder="Ej: 1000123456"
+                           required>
+                    <div class="error-campo"
+                         th:if="${#fields.hasErrors('documento')}"
+                         th:errors="*{documento}">
+                    </div>
+                </div>
+
+                <div class="rm-field rm-field-small">
+                    <label for="tipo_movimiento">Movimiento</label>
+                    <select id="tipo_movimiento"
+                            class="rm-select"
+                            th:field="*{tipoMovimiento}"
+                            required>
+                        <option value="">Seleccione...</option>
+                        <option value="Ingreso">Ingreso</option>
+                        <option value="Salida">Salida</option>
+                    </select>
+                    <div class="error-campo"
+                         th:if="${#fields.hasErrors('tipoMovimiento')}"
+                         th:errors="*{tipoMovimiento}">
+                    </div>
+                </div>
+            </div>
+
+            <!-- FECHA Y HORA (SOLO LECTURA) -->
+            <div class="rm-row">
+                <div class="rm-field rm-field-small">
+                    <label for="fecha">Fecha</label>
+                    <input type="date"
+                           id="fecha"
+                           class="rm-input-readonly"
+                           th:value="${fechaHoy}"
+                           readonly>
+                </div>
+
+                <div class="rm-field rm-field-small">
+                    <label for="hora">Hora</label>
+                    <input type="time"
+                           id="hora"
+                           class="rm-input-readonly"
+                           th:value="${horaAhora}"
+                           readonly>
+                </div>
+            </div>
+
+            <!-- MOTIVO -->
+            <div class="rm-row">
+                <div class="rm-field rm-field-grow">
+                    <label for="motivo">Motivo</label>
+                    <input type="text"
+                           id="motivo"
+                           class="rm-input"
+                           th:field="*{motivo}"
+                           placeholder="Motivo del ingreso o salida (opcional)">
+                </div>
+            </div>
+
+            <!-- ACCIONES -->
+            <div class="rm-actions">
+                <button type="reset" class="btn rm-btn-secondary">
+                    <i class="fa-solid fa-eraser"></i> Limpiar
+                </button>
+                <button type="submit" class="btn primary-btn rm-btn-primary">
+                    <i class="fa-solid fa-save"></i> Registrar Movimiento
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- SEPARADOR -->
+    <hr class="rm-separator"/>
+
+    <!-- CARD HISTORIAL -->
+    <div class="rm-card rm-card-table">
+        <div class="rm-card-header">
+            <div>
+                <h3><i class="fa-solid fa-clock-rotate-left"></i> Historial de Registros Manuales</h3>
+                <p>Consulta los últimos movimientos registrados manualmente.</p>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="styled-table">
+                <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Cédula</th>
+                    <th>Motivo</th>
+                    <th>Fecha</th>
+                    <th>Hora Entrada</th>
+                    <th>Hora Salida</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="r : ${registrosList}">
+                    <td th:text="${r.nombre}">Nombre</td>
+                    <td th:text="${r.apellido}">Apellido</td>
+                    <td th:text="${r.documento}">Documento</td>
+                    <td th:text="${r.motivo != null ? r.motivo : '-'}">Motivo</td>
+                    <td th:text="${r.fecha}">2025-12-10</td>
+                    <td th:text="${r.horaEntrada != null ? r.horaEntrada : '-'}">23:14:41</td>
+                    <td th:text="${r.horaSalida != null ? r.horaSalida : '---'}">23:15:07</td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(registrosList)}">
+                    <td colspan="7" class="no-data">
+                        <i class="fa-solid fa-inbox" style="margin-right: 8px;"></i>
+                        No hay registros manuales aún.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="paginacion" th:if="${totalPages > 1}">
+            <a th:each="i : ${pageNumbers}"
+               th:href="@{/vigilante/registro-manual(page=${i})}"
+               th:text="${i + 1}"
+               th:classappend="${i == currentPage} ? ' active' : ''">
+            </a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+/* Estilos para la vista Estado de Justificaciones */
+
+/* Contenedor general */
+#estado-justificaciones-section {
+  padding: 1rem;
+  background: #fff;
+}
+
+.filtros-container {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.filtros-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: .4rem .7rem;
+  border-radius: .25rem;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.primary-btn {
+  background: #0d6efd;
+  color: #fff;
+  border-color: #0d6efd;
+}
+
+.secondary-btn {
+  background: #f8f9fa;
+  color: #212529;
+  border-color: #ced4da;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+#historialJustificacionesTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: .5rem;
+}
+
+#historialJustificacionesTable th,
+#historialJustificacionesTable td {
+  padding: .6rem .8rem;
+  border: 1px solid #e9ecef;
+  text-align: left;
+  vertical-align: middle;
+  font-size: .95rem;
+}
+
+#historialJustificacionesTable thead th {
+  background: #f1f3f5;
+  font-weight: 600;
+}
+
+.estado-badge {
+  display: inline-block;
+  padding: .25rem .5rem;
+  border-radius: 999px;
+  font-size: .85rem;
+  color: #fff;
+}
+
+/* Colores por estado (minimales) */
+.estado-pendiente { background: #ffc107; color: #212529; }
+.estado-aprobado { background: #198754; }
+.estado-rechazado { background: #dc3545; }
+
+/* Botón de descargar evidencia */
+.btn-download {
+  display: inline-block;
+  padding: .25rem .5rem;
+  background: #0d6efd;
+  color: #fff;
+  border-radius: .25rem;
+  text-decoration: none;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .filtros-container { flex-direction: column; }
+  #historialJustificacionesTable th, #historialJustificacionesTable td { font-size: .85rem; }
+}
+

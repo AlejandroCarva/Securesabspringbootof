@@ -1,75 +1,100 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org"
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/mainA}">
 <head>
     <title layout:fragment="title">Consultar Asistencia</title>
 </head>
-<body>
-    <div layout:fragment="content">
-        <section class="content-section-standard">
-            <h2>Consulta de Asistencia</h2>
-            
-            <!-- Formulario de filtros -->
-            <div class="filtros-container">
-                <form th:action="@{/aprendiz/asistencia}" method="GET" class="filtros-form">
-                    <div class="filtro-group">
-                        <label for="competencia">Nombre Competencia:</label>
-                        <input type="text" id="competencia" name="competencia" 
-                               placeholder="Ej. Desarrollo Web" 
-                               th:value="${param.competencia}" />
-                    </div>
-                    <div class="filtro-group">
-                        <label for="fecha">Fecha:</label>
-                        <input type="date" id="fecha" name="fecha" 
-                               th:value="${param.fecha}" />
-                    </div>
-                    <div class="filtro-actions">
-                        <button type="submit" class="btn primary-btn">Aplicar Filtro</button>
-                    </div>
-                </form>
-            </div>
 
-            <!-- Tabla de asistencias -->
+<body>
+<div layout:fragment="content">
+    <section id="asistencia-section" class="content-section active-section" aria-labelledby="asistencia-heading">
+
+        <div class="section-header">
+            <div>
+                <h2 id="asistencia-heading">Consulta de Asistencia</h2>
+                <p class="section-subtitle">Filtra por competencia y fecha para ver tu historial</p>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters-card">
+            <form th:action="@{/aprendiz/asistencia}" method="GET" class="filters-grid">
+                <div class="form-group">
+                    <label for="competencia">Nombre Competencia</label>
+                    <input type="text" id="competencia" name="competencia"
+                           placeholder="Ej. Desarrollo Web"
+                           th:value="${param.competencia}" />
+                </div>
+
+                <div class="form-group">
+                    <label for="fecha">Fecha</label>
+                    <input type="date" id="fecha" name="fecha"
+                           th:value="${param.fecha}" />
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-modern btn-primary">Aplicar filtro</button>
+                    <a th:href="@{/aprendiz/asistencia}" class="btn btn-modern btn-outline">Limpiar</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tabla -->
+        <div class="table-card">
             <div class="table-responsive">
-                <table class="table-estandar">
+                <table class="table-modern">
                     <thead>
-                        <tr>
-                            <th scope="col">Fecha</th>
-                            <th scope="col">Competencia</th>
-                            <th scope="col">Instructor</th>
-                            <th scope="col">Estado</th>
-                        </tr>
+                    <tr>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Competencia</th>
+                        <th scope="col">Instructor</th>
+                        <th scope="col">Estado</th>
+                    </tr>
                     </thead>
+
                     <tbody>
-                        <!-- Si hay asistencias -->
-                        <tr th:each="asistencia : ${asistencias}" th:if="${asistencias != null and not asistencias.empty}">
-                            <td th:text="${asistencia.fecha}">Fecha</td>
-                            <td th:text="${asistencia.nombreCompetencia} ?: 'N/A'">Competencia</td>
-                            <td th:text="${asistencia.nombreInstructor} ?: 'N/A'">Instructor</td>
-                            <td>
-                                <span th:classappend="'estado-badge estado-' + ${#strings.toLowerCase(asistencia.estadoAsistencia)}"
-                                      th:text="${asistencia.estadoAsistencia} ?: 'N/A'">
-                                    Estado
-                                </span>
-                            </td>
-                        </tr>
-                        
-                        <!-- Si no hay asistencias -->
-                        <tr th:if="${asistencias != null and asistencias.empty}">
-                            <td colspan="4" style="text-align: center;">No se encontraron registros de asistencia.</td>
-                        </tr>
-                        
-                        <!-- Si asistencias es null -->
-                        <tr th:if="${asistencias == null}">
-                            <td colspan="4" style="text-align: center; color: red;">
-                                Error: No se pudieron cargar las asistencias
-                            </td>
-                        </tr>
+                    <!-- Si hay asistencias -->
+                    <tr th:each="asistencia : ${asistencias}"
+                        th:if="${asistencias != null and not asistencias.empty}">
+                        <td th:text="${asistencia.fecha}">Fecha</td>
+                        <td th:text="${asistencia.nombreCompetencia} ?: 'N/A'">Competencia</td>
+                        <td th:text="${asistencia.nombreInstructor} ?: 'N/A'">Instructor</td>
+                        <td>
+                            <span class="badge"
+                                  th:classappend="' badge-' + ${#strings.toLowerCase(asistencia.estadoAsistencia)}"
+                                  th:text="${asistencia.estadoAsistencia} ?: 'N/A'">
+                                Estado
+                            </span>
+                        </td>
+                    </tr>
+
+                    <!-- Si no hay asistencias -->
+                    <tr th:if="${asistencias != null and asistencias.empty}">
+                        <td colspan="4">
+                            <div class="empty-state">
+                                <div class="empty-title">Sin registros</div>
+                                <div class="empty-subtitle">No se encontraron asistencias con esos filtros.</div>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Si asistencias es null -->
+                    <tr th:if="${asistencias == null}">
+                        <td colspan="4">
+                            <div class="empty-state error">
+                                <div class="empty-title">Error</div>
+                                <div class="empty-subtitle">No se pudieron cargar las asistencias.</div>
+                            </div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
-        </section>
-    </div>
+        </div>
+
+    </section>
+</div>
 </body>
 </html>

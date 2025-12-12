@@ -33,8 +33,8 @@ body {
 .menu-toggle {
   display: flex;
   position: fixed;
-  top: 20px;
-  left: 10px;
+  top: 15px;
+  left: 15px;
   z-index: 1001;
   cursor: pointer;
   background: var(--main-green);
@@ -52,6 +52,11 @@ body {
 
 .menu-toggle:hover {
   background: #004d00;
+}
+
+/* Ajuste cuando el sidebar está cerrado */
+body.menu-closed .menu-toggle {
+  left: 15px;
 }
 
 /* --- Sidebar --- */
@@ -190,7 +195,7 @@ body.menu-closed .main-content-wrapper {
   display: none;
 }
 
-.user-dropdown.show {
+.user-dropdown.active {
   display: block;
 }
 
@@ -1004,4 +1009,192 @@ body.menu-closed .main-content-wrapper {
         margin: 5px;
         border-radius: 8px;
     }
+}
+/* =======================================================
+   ESTILO VIGILANTE (clases usadas en las vistas que te pasé)
+   Pegar al FINAL del CSS
+======================================================= */
+
+/* Header de sección (título + subtítulo) */
+.section-header{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:18px;
+}
+.section-subtitle{
+    margin-top:6px;
+    color:#6b7280;
+    font-size:0.95rem;
+}
+
+/* Cards (contenedores tipo vigilante) */
+.filters-card,
+.table-card,
+.profile-card,
+.form-card{
+    background: var(--main-bg-color);
+    border: 1px solid rgba(0,0,0,0.06);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    padding: 18px;
+    width:100%;
+}
+
+/* Grid de filtros / form (responsive bonito) */
+.filters-grid{
+    display:grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 14px;
+    width:100%;
+}
+.filters-grid .form-group{
+    grid-column: span 6;
+    margin-bottom:0;
+}
+.filters-grid .form-actions{
+    grid-column: span 12;
+    display:flex;
+    gap:10px;
+    justify-content:flex-end;
+    margin-top:6px;
+}
+@media (max-width: 768px){
+    .filters-grid .form-group{ grid-column: span 12; }
+    .filters-grid .form-actions{ justify-content:center; }
+}
+
+/* Botones "modern" */
+.btn-modern{
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    border: 1px solid transparent;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    transition: transform .15s ease, background .2s ease, border-color .2s ease;
+}
+.btn-modern:hover{ transform: translateY(-1px); }
+
+.btn-primary{
+    background: var(--main-green);
+    color: var(--text-light);
+}
+.btn-primary:hover{ background:#004d00; }
+
+.btn-outline{
+    background: transparent;
+    color: var(--main-green);
+    border-color: rgba(0,100,0,0.35);
+}
+.btn-outline:hover{
+    background: rgba(0,100,0,0.06);
+}
+
+.btn-sm{
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+/* Tabla "modern" */
+.table-modern{
+    width:100%;
+    border-collapse: collapse;
+    background: var(--main-bg-color);
+}
+.table-modern th, .table-modern td{
+    padding: 12px 14px;
+    border-bottom: 1px solid #e6e9ef;
+    text-align:left;
+    vertical-align: middle;
+}
+.table-modern thead th{
+    background: var(--main-green);
+    color: var(--text-light);
+    font-weight: 800;
+    letter-spacing: .3px;
+}
+.table-modern tbody tr:nth-child(even){
+    background-color: #f8f8f8;
+}
+.table-modern tbody tr:hover{
+    background-color: #f1f5fd;
+}
+
+/* Badges (compatibles con tus estado-*) */
+.badge{
+    display:inline-flex;
+    align-items:center;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    border: 1px solid transparent;
+}
+.badge-aprobado, .badge-asistio{
+    background-color:#d4edda;
+    color:#155724;
+    border-color:#c3e6cb;
+}
+.badge-rechazado, .badge-falta{
+    background-color:#f8d7da;
+    color:#721c24;
+    border-color:#f5c6cb;
+}
+.badge-pendiente, .badge-retardo{
+    background-color:#fff3cd;
+    color:#856404;
+    border-color:#ffeeba;
+}
+.badge-en_revision{
+    background-color:#cce7ff;
+    color:#004085;
+    border-color:#b3d7ff;
+}
+
+/* Estado vacío (bonito) */
+.empty-state{
+    padding: 18px;
+    border-radius: 10px;
+    background: #f8f9fa;
+    border: 1px dashed rgba(0,0,0,0.15);
+    text-align:center;
+}
+.empty-state .empty-title{
+    font-weight: 900;
+    margin-bottom: 4px;
+}
+.empty-state .empty-subtitle{
+    color:#6b7280;
+}
+.empty-state.error{
+    background:#fff0f0;
+    border-color:#f5c6cb;
+}
+.muted{ color:#6b7280; }
+
+/* Perfil (grid) */
+.profile-grid{
+    display:grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 14px;
+}
+.profile-item{ grid-column: span 6; }
+.profile-label{ color:#6b7280; font-size:.9rem; margin-bottom:4px; }
+.profile-value{ font-weight:800; color: var(--text-dark); }
+@media (max-width: 768px){
+    .profile-item{ grid-column: span 12; }
+}
+
+/* Fix final: tu max-width mal puesto */
+.content-section{
+    max-width: 1200px !important; /* evita el max-width:100px */
 }

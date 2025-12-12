@@ -46,8 +46,8 @@ public class InstructorAsistenciaServiceImpl implements IInstructorAsistenciaSer
                     .findByUsuarioIdAndFechaAndInstructor(aprendiz.getIdUsuario(), fecha, instructorId);
                 
                 if (asistenciaOpt.isPresent()) {
-                    asistenciasMap.put(aprendiz.getIdUsuario(), asistenciaOpt.get().getEstadoAsistencia());
-                    System.out.println("?   - Aprendiz " + aprendiz.getIdUsuario() + ": " + asistenciaOpt.get().getEstadoAsistencia());
+                    asistenciasMap.put(aprendiz.getIdUsuario(), asistenciaOpt.get().getEstado());
+                    System.out.println("?   - Aprendiz " + aprendiz.getIdUsuario() + ": " + asistenciaOpt.get().getEstado());
                 }
             }
             
@@ -80,7 +80,7 @@ public class InstructorAsistenciaServiceImpl implements IInstructorAsistenciaSer
             Usuario instructor = usuarioRepository.findById(dto.getInstructorId())
                 .orElseThrow(() -> new RuntimeException("Instructor no encontrado"));
             
-            Competencia competencia = competenciaRepository.findById(dto.getCompetenciaId().longValue())
+            Competencia competencia = competenciaRepository.findById(dto.getCompetenciaId())
                 .orElseThrow(() -> new RuntimeException("Competencia no encontrada"));
             
             System.out.println("? Instructor: " + instructor.getNombre());
@@ -119,7 +119,7 @@ public class InstructorAsistenciaServiceImpl implements IInstructorAsistenciaSer
                         System.out.println("?   Creando nueva asistencia");
                     }
                     
-                    asistencia.setEstadoAsistencia(estado);
+                    asistencia.setEstado(estado);
                     asistenciaRepository.save(asistencia);
                     
                     guardadas++;
@@ -207,7 +207,7 @@ public class InstructorAsistenciaServiceImpl implements IInstructorAsistenciaSer
                     String fechaStr = asistencia.getFecha().toString();
                     asistenciasMap.put(fechaStr, asistencia);
                     
-                    if ("Asistio".equals(asistencia.getEstadoAsistencia())) {
+                    if ("Asistio".equals(asistencia.getEstado())) {
                         totalAsistencias++;
                     }
                 }

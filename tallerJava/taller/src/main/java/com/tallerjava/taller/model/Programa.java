@@ -6,81 +6,83 @@ import java.util.List;
 @Entity
 @Table(name = "programa")
 public class Programa {
-    
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_programa")
-    private Integer idPrograma;
-    
+    private Integer id;
+
     @Column(name = "nombre_programa")
     private String nombrePrograma;
-    
+
     @Column(name = "tipo_programa")
     private String tipoPrograma;
-    
-    @Column(name = "id_coordinacion")
-    private Integer idCoordinacion;
-    
+
+    @ManyToOne
+    @JoinColumn(name = "id_coordinacion")
+    private Coordinacion coordinacion;
+
     @OneToMany(mappedBy = "programa")
     private List<Ficha> fichas;
-    
+
     // ---------- CONSTRUCTORES ----------
     public Programa() {
     }
-    
+
     public Programa(Integer idPrograma) {
-        this.idPrograma = idPrograma;
+        this.id = idPrograma;
     }
-    
+
     public Programa(Integer idPrograma, String nombrePrograma) {
-        this.idPrograma = idPrograma;
+        this.id = idPrograma;
         this.nombrePrograma = nombrePrograma;
     }
-    
-    // ---------- GETTERS & SETTERS ----------
-    public Integer getIdPrograma() {
-        return idPrograma;
+
+    // GETTERS Y SETTERS
+    public Integer getId() {
+        return id;
     }
-    
-    public void setIdPrograma(Integer idPrograma) {
-        this.idPrograma = idPrograma;
+
+    public void setId(Integer id) {
+        this.id = id;
     }
-    
+
     public String getNombrePrograma() {
         return nombrePrograma;
     }
-    
+
     public void setNombrePrograma(String nombrePrograma) {
         this.nombrePrograma = nombrePrograma;
     }
-    
+
     public String getTipoPrograma() {
         return tipoPrograma;
     }
-    
+
     public void setTipoPrograma(String tipoPrograma) {
         this.tipoPrograma = tipoPrograma;
     }
-    
-    public Integer getIdCoordinacion() {
-        return idCoordinacion;
+
+    public Coordinacion getCoordinacion() {
+        return coordinacion;
     }
-    
-    public void setIdCoordinacion(Integer idCoordinacion) {
-        this.idCoordinacion = idCoordinacion;
+
+    public void setCoordinacion(Coordinacion coordinacion) {
+        this.coordinacion = coordinacion;
     }
-    
+
     public List<Ficha> getFichas() {
         return fichas;
     }
-    
+
     public void setFichas(List<Ficha> fichas) {
         this.fichas = fichas;
     }
-    
+
     @Override
     public String toString() {
         return "Programa{" +
-                "idPrograma=" + idPrograma +
+                "id=" + id +
                 ", nombrePrograma='" + nombrePrograma + '\'' +
                 '}';
     }

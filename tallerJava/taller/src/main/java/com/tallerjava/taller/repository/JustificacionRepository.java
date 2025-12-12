@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public interface JustificacionRepository extends JpaRepository<Justificacion, Long> {
-    
+public interface JustificacionRepository extends JpaRepository<Justificacion, Integer> {
+
     // ✅ MÉTODOS EXISTENTES (los mantienes)
     @Query("SELECT j FROM Justificacion j WHERE j.asistenciaAmbiente.usuario.idUsuario = :usuarioId")
     List<Justificacion> findByUsuarioId(@Param("usuarioId") Integer usuarioId);
@@ -57,10 +57,10 @@ public interface JustificacionRepository extends JpaRepository<Justificacion, Lo
     // 2. Actualizar estado de justificación
     @Modifying
     @Transactional
-    @Query("UPDATE Justificacion j SET j.estado = :estado, j.observaciones = :observaciones WHERE j.idJustificacion = :id")
-    void updateEstadoJustificacion(@Param("id") Long id, @Param("estado") String estado, @Param("observaciones") String observaciones);
-    
+    @Query("UPDATE Justificacion j SET j.estado = :estado, j.observaciones = :observaciones WHERE j.id = :id")
+    void updateEstadoJustificacion(@Param("id") Integer id, @Param("estado") String estado, @Param("observaciones") String observaciones);
+
     // 3. Obtener justificaciones por asistencia
     @Query("SELECT j FROM Justificacion j WHERE j.asistenciaAmbiente.id = :asistenciaId")
-    List<Justificacion> findByAsistenciaId(@Param("asistenciaId") Long asistenciaId);
+    List<Justificacion> findByAsistenciaId(@Param("asistenciaId") Integer asistenciaId);
 }

@@ -1,71 +1,57 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org"
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layouts/mainA}">
 <head>
-    <title>Mi Perfil</title>
-    <style>
-        .profile-details {
-            display: flex;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .profile-info-group {
-            flex: 1;
-        }
-        
-        .profile-info-group p {
-            margin-bottom: 0.75rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .profile-actions {
-            margin-top: 1.5rem;
-        }
-        
-        .hidden-form {
-            display: none;
-        }
-    </style>
+    <title layout:fragment="title">Mi Perfil</title>
 </head>
+
 <body>
-    <div layout:fragment="content">
-        <section class="content-section-standard">
-            <h2>Mi Perfil</h2>
-            
-            <div class="profile-details">
-                <div class="profile-info-group">
-                    <p><strong>Nombre Completo:</strong> 
-                       <span th:text="${usuario.nombre + ' ' + usuario.apellido}">Nombre Apellido</span>
-                    </p>
-                    <p><strong>Correo Electrónico:</strong> 
-                       <span th:text="${usuario.correo}">correo@ejemplo.com</span>
-                    </p>
-                </div>
-                <div class="profile-info-group">
-                    <p><strong>Rol:</strong> 
-                       <span>Aprendiz</span>
-                    </p>
-                    <p><strong>Ficha:</strong> 
-                       <span th:text="${usuario.ficha != null} ? ${usuario.ficha.numeroFicha} : 'No asignada'">No asignada</span>
-                    </p>
-                </div>
+<div layout:fragment="content">
+    <section id="perfil-section" class="content-section active-section" aria-labelledby="perfil-heading">
+
+        <div class="section-header">
+            <div>
+                <h2 id="perfil-heading">Mi Perfil</h2>
+                <p class="section-subtitle">Consulta tu información y actualiza tu foto</p>
             </div>
-            
-            <div class="profile-actions">
-                <button class="btn primary-btn" id="miPerfilEditarBtn">Cambiar Foto de Perfil</button>
+        </div>
+
+        <div class="profile-card">
+            <div class="profile-grid">
+                <div class="profile-item">
+                    <div class="profile-label">Nombre completo</div>
+                    <div class="profile-value" th:text="${usuario.nombre + ' ' + usuario.apellido}">Nombre Apellido</div>
+                </div>
+
+                <div class="profile-item">
+                    <div class="profile-label">Correo</div>
+                    <div class="profile-value" th:text="${usuario.correo}">correo@ejemplo.com</div>
+                </div>
+
+                <div class="profile-item">
+                    <div class="profile-label">Rol</div>
+                    <div class="profile-value">Aprendiz</div>
+                </div>
+
+                <div class="profile-item">
+                    <div class="profile-label">Ficha</div>
+                    <div class="profile-value"
+                         th:text="${usuario.ficha != null} ? ${usuario.ficha.numeroFicha} : 'No asignada'">No asignada</div>
+                </div>
             </div>
 
-            <!-- Formulario oculto para subir foto de perfil -->
-            <form id="profileForm" th:action="@{/aprendiz/actualizarPerfil}" method="POST" 
-                  enctype="multipart/form-data" class="hidden-form">
+            <div class="form-actions" style="margin-top: 16px;">
+                <button class="btn btn-modern btn-primary" id="miPerfilEditarBtn" type="button">Cambiar foto</button>
+            </div>
+
+            <form id="profileForm" th:action="@{/aprendiz/actualizarPerfil}" method="POST"
+                  enctype="multipart/form-data" style="display:none;">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <input type="file" name="foto_perfil" id="foto_perfil" accept="image/*" 
-                       onchange="this.form.submit()">
+                <input type="file" name="foto_perfil" id="foto_perfil" accept="image/*" onchange="this.form.submit()">
             </form>
-        </section>
+        </div>
 
         <script>
             document.addEventListener('DOMContentLoaded', function() {
@@ -77,6 +63,8 @@
                 }
             });
         </script>
-    </div>
+
+    </section>
+</div>
 </body>
 </html>

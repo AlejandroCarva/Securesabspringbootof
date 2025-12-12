@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<body th:replace="~{layouts/indexC :: layout(~{::content})}">
+<div th:fragment="content">
+    <section id="crear-novedad-section" class="content-section" aria-labelledby="crear-novedad-heading">
+        <div class="section-header">
+            <div>
+                <h2 id="crear-novedad-heading">Crear novedad / comunicado (debug)</h2>
+                <p class="section-subtitle">Formulario sin bindings Thymeleaf para diagnóstico</p>
+            </div>
+        </div>
+
+        <div class="two-column">
+            <article class="card-box">
+                <h3>Detalles de la novedad</h3>
+                <form id="formCrearNovedadDebug" class="flex-form" autocomplete="off" action="/coordinador/novedades/guardar" method="post">
+                    <div class="field">
+                        <label for="novedadFicha">Ficha afectada <span class="required">*</span></label>
+                        <select id="novedadFicha" name="ficha" required>
+                            <option value="">Seleccione la ficha</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="novedadInstructor">Instructor responsable <span class="required">*</span></label>
+                        <select id="novedadInstructor" name="instructor" required>
+                            <option value="">Seleccione un instructor</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="novedadTipo">Tipo de novedad</label>
+                        <select id="novedadTipo" name="tipo">
+                            <option value="Comunicado">Comunicado</option>
+                            <option value="Seguimiento">Seguimiento</option>
+                            <option value="Alerta">Alerta</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="novedadTitulo">Título / asunto <span class="required">*</span></label>
+                        <input type="text" id="novedadTitulo" name="titulo" required placeholder="Ej. Falta de dotación para la práctica" />
+                    </div>
+                    <div class="field">
+                        <label for="novedadDescripcion">Descripción detallada <span class="required">*</span></label>
+                        <textarea id="novedadDescripcion" name="descripcion" rows="4" required placeholder="Describe lo sucedido, responsables, fechas y acciones propuestas"></textarea>
+                    </div>
+                    <div class="actions-row">
+                        <div class="left"></div>
+                        <div class="right">
+                            <button type="submit" class="primary-btn"><i class="fas fa-paper-plane"></i> Registrar novedad (debug)</button>
+                        </div>
+                    </div>
+                </form>
+            </article>
+
+            <article class="card-box">
+                <div class="card-head">
+                    <div>
+                        <h3>Resumen reciente</h3>
+                        <p>Vista rápida del estado de cada novedad diligenciada.</p>
+                    </div>
+                    <div class="pill" id="novedadesRecientesCount">0</div>
+                </div>
+                <div class="table-responsive">
+                    <table class="modern-table">
+                        <thead>
+                        <tr>
+                            <th width="110">Fecha</th>
+                            <th width="140">Ficha</th>
+                            <th>Título</th>
+                            <th width="150">Instructor</th>
+                            <th width="120">Estado</th>
+                        </tr>
+                        </thead>
+                        <tbody id="novedadesRecientesTabla">
+                        <tr>
+                            <td colspan="5" class="empty-message">Aún no se han registrado novedades (debug)</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </div>
+    </section>
+</div>
+</body>
+</html>

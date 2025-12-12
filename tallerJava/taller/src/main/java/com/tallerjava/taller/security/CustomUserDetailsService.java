@@ -1,6 +1,7 @@
 package com.tallerjava.taller.security;
 
 import com.tallerjava.taller.model.Usuario;
+import com.tallerjava.taller.model.Role;
 import com.tallerjava.taller.repository.IUsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -23,31 +23,40 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String cedula) throws UsernameNotFoundException {
         System.out.println("? CUSTOM USER DETAILS - Buscando usuario con cédula: " + cedula);
-        
+
         Usuario usuario = usuarioRepository.findByCedula(cedula)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado: " + cedula));
 
         System.out.println("? Usuario encontrado: " + usuario.getNombre() + " " + usuario.getApellido());
         System.out.println("? ID Usuario: " + usuario.getIdUsuario());
 
-        // Obtener roles REALES del usuario
+        // Obtener roles desde la tabla intermedia con una consulta nativa
         List<GrantedAuthority> authorities = new ArrayList<>();
-        
-        if (usuario.getRoles() != null && !usuario.getRoles().isEmpty()) {
-            System.out.println("? Roles encontrados en BD:");
-            authorities = usuario.getRoles().stream()
-                    .map(role -> {
-                        String roleName = "ROLE_" + role.getName().toUpperCase();
-                        System.out.println("? - " + role.getName() + " -> " + roleName);
-                        return new SimpleGrantedAuthority(roleName);
-                    })
-                    .collect(Collectors.toList());
-        } else {
-            // Si no tiene roles asignados, asignar según el tipo de usuario
-            System.out.println("? No se encontraron roles en BD. Asignando por defecto...");
-            
-            // Verificar si es instructor (no tiene ficha asignada)
-            if (usuario.getFicha() == null) {
+
+        try {
+            List<String> roleNames = usuarioRepository.findRoleNamesByUserId(usuario.getIdUsuario());
+            if (roleNames != null && !roleNames.isEmpty()) {
+                for (String rn : roleNames) {
+                    if (rn != null && !rn.isEmpty()) {
+                        String name = rn.trim().toUpperCase();
+                        authorities.add(new SimpleGrantedAuthority("ROLE_" + name));
+                    }
+                }
+                System.out.println("? Authorities asignadas desde la BD (nombres): " + authorities.size());
+            }
+        } catch (Exception e) {
+            System.err.println("? ERROR consultando roles desde DB para usuario " + usuario.getIdUsuario() + ": " + e.getMessage());
+        }
+
+        // Si no hay roles en BD, fallback a la lógica anterior
+        if (authorities.isEmpty()) {
+            // ✅ Verificar si es el usuario vigilante específico (cédula 1000856999)
+            if ("1000856999".equals(cedula)) {
+                authorities.add(new SimpleGrantedAuthority("ROLE_VIGILANTE"));
+                System.out.println("? Asignado ROLE_VIGILANTE para usuario: " + cedula);
+            }
+            // Verificar si es instructor (no tiene ficha asignada) o aprendiz
+            else if (usuario.getFicha() == null) {
                 // Probablemente sea instructor o coordinador
                 authorities.add(new SimpleGrantedAuthority("ROLE_INSTRUCTOR"));
                 System.out.println("? Asignado ROLE_INSTRUCTOR por defecto (sin ficha)");
@@ -56,10 +65,10 @@ public class CustomUserDetailsService implements UserDetailsService {
                 authorities.add(new SimpleGrantedAuthority("ROLE_APRENDIZ"));
                 System.out.println("? Asignado ROLE_APRENDIZ por defecto (con ficha)");
             }
+
+            System.out.println("? Total authorities (fallback): " + authorities.size());
         }
 
-        System.out.println("? Total authorities: " + authorities.size());
-        
         return new CustomUserDetails(
                 usuario.getCedula(),
                 usuario.getPassword(),

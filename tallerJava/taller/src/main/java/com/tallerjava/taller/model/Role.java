@@ -1,7 +1,6 @@
 package com.tallerjava.taller.model;
 
 import jakarta.persistence.*;
-import java.util.Set;
 
 @Entity
 @Table(name = "roles")
@@ -17,9 +16,6 @@ public class Role {
     @Column(name = "guard_name")
     private String guardName = "web";
 
-    // Opcional: relación inversa (no necesaria si no la usas)
-    @ManyToMany(mappedBy = "roles")
-    private Set<Usuario> usuarios;
 
     // -------- CONSTRUCTORES --------
     public Role() {}
@@ -38,7 +34,4 @@ public class Role {
 
     public String getGuardName() { return guardName; }
     public void setGuardName(String guardName) { this.guardName = guardName; }
-
-    public Set<Usuario> getUsuarios() { return usuarios; }
-    public void setUsuarios(Set<Usuario> usuarios) { this.usuarios = usuarios; }
 }

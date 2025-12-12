@@ -21,7 +21,7 @@ public class CompetenciaServiceImpl implements ICompetenciaService {
 
     @Override
     public Competencia obtenerCompetenciaPorId(Integer id) {
-        return competenciaRepository.findById(id.longValue())
+        return competenciaRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Competencia no encontrada"));
     }
 

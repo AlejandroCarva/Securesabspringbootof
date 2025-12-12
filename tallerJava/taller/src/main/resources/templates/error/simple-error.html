@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        .error-container { background: white; padding: 20px; border-radius: 8px; max-width: 800px; }
+        .error-title { color: #d32f2f; margin-bottom: 10px; }
+        .error-message { margin-bottom: 20px; }
+        .back-link { color: #1976d2; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .error-details { background: #f8f8f8; padding: 10px; border-radius: 4px; margin-top: 20px; font-size: 12px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1 class="error-title">Ha ocurrido un error</h1>
+        <div class="error-message" th:text="${errorMensaje}">Error desconocido</div>
+        <a href="/coordinador" class="back-link">← Volver al inicio</a>
+        <div class="error-details" th:text="${errorCompleto}" th:if="${errorCompleto}"></div>
+    </div>
+</body>
+</html>
+
