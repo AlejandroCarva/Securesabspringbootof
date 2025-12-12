@@ -1,0 +1,987 @@
+[TallerApplication] Puerto 8080 ocupado: usando puerto aleatorio (server.port=0)
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::               (v3.4.12)
+
+2025-12-11T21:43:34.036-05:00  INFO 13432 --- [           main] c.tallerjava.taller.TallerApplication    : Starting TallerApplication v0.0.1-SNAPSHOT using Java 21.0.5 with PID 13432 (C:\xampp\tallerJava\tallerJava\taller\target\taller-0.0.1-SNAPSHOT.jar started by alejo in C:\xampp\tallerJava\tallerJava\taller)
+2025-12-11T21:43:34.038-05:00 DEBUG 13432 --- [           main] c.tallerjava.taller.TallerApplication    : Running with Spring Boot v3.4.12, Spring v6.2.14
+2025-12-11T21:43:34.040-05:00  INFO 13432 --- [           main] c.tallerjava.taller.TallerApplication    : No active profile set, falling back to 1 default profile: "default"
+2025-12-11T21:43:35.660-05:00  INFO 13432 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-12-11T21:43:35.817-05:00  INFO 13432 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 146 ms. Found 14 JPA repository interfaces.
+2025-12-11T21:43:37.177-05:00  INFO 13432 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 0 (http)
+2025-12-11T21:43:37.209-05:00  INFO 13432 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-12-11T21:43:37.209-05:00  INFO 13432 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.49]
+2025-12-11T21:43:37.277-05:00  INFO 13432 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-12-11T21:43:37.278-05:00  INFO 13432 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2904 ms
+2025-12-11T21:43:37.372-05:00 DEBUG 13432 --- [           main] c.t.taller.config.CsrfCookieFilter       : Filter 'csrfCookieFilter' configured for use
+2025-12-11T21:43:37.587-05:00  INFO 13432 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-12-11T21:43:37.697-05:00  INFO 13432 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.36.Final
+2025-12-11T21:43:37.773-05:00  INFO 13432 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-12-11T21:43:38.389-05:00  INFO 13432 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-12-11T21:43:38.455-05:00  INFO 13432 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-12-11T21:43:38.819-05:00  INFO 13432 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@3b25709e
+2025-12-11T21:43:38.823-05:00  INFO 13432 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-12-11T21:43:38.911-05:00  WARN 13432 --- [           main] org.hibernate.dialect.Dialect            : HHH000511: The 5.5.5 version for [org.hibernate.dialect.MySQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 8.0.0. Check the community dialects project for available legacy versions.
+2025-12-11T21:43:38.922-05:00  WARN 13432 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-12-11T21:43:38.969-05:00  INFO 13432 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 5.5.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-12-11T21:43:40.575-05:00  INFO 13432 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-12-11T21:43:40.579-05:00  INFO 13432 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-12-11T21:43:41.050-05:00  INFO 13432 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-12-11T21:43:44.858-05:00  WARN 13432 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-12-11T21:43:44.928-05:00  INFO 13432 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-12-11T21:43:46.951-05:00  INFO 13432 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 51960 (http) with context path '/'
+2025-12-11T21:43:46.998-05:00  INFO 13432 --- [           main] c.tallerjava.taller.TallerApplication    : Started TallerApplication in 13.457 seconds (process running for 14.099)
+2025-12-11T21:43:47.216-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+2025-12-11T21:43:47.241-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [1000856999]
+2025-12-11T21:43:47.622-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        r1_0.id,
+        r1_0.guard_name,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        lower(r1_0.name)=?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.guard_name,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        lower(r1_0.name)=?
+2025-12-11T21:43:47.623-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [vigilante]
+2025-12-11T21:43:47.635-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        r1_0.model_id,
+        r1_1.id,
+        r1_1.guard_name,
+        r1_1.name 
+    from
+        model_has_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.model_id=?
+Hibernate: 
+    select
+        r1_0.model_id,
+        r1_1.id,
+        r1_1.guard_name,
+        r1_1.name 
+    from
+        model_has_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.model_id=?
+2025-12-11T21:43:47.637-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:INTEGER) <- [25]
+[DataInitializer] Usuario actualizado: cedula=1000856999, role=vigilante
+2025-12-11T21:43:47.726-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    update
+        usuarios 
+    set
+        apellido=?,
+        cedula=?,
+        correo=?,
+        email_verified_at=?,
+        estado=?,
+        id_ficha=?,
+        foto_perfil=?,
+        nombre=?,
+        password=?,
+        telefono=? 
+    where
+        id_usuario=?
+Hibernate: 
+    update
+        usuarios 
+    set
+        apellido=?,
+        cedula=?,
+        correo=?,
+        email_verified_at=?,
+        estado=?,
+        id_ficha=?,
+        foto_perfil=?,
+        nombre=?,
+        password=?,
+        telefono=? 
+    where
+        id_usuario=?
+2025-12-11T21:43:47.727-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [SÃ¡nchez]
+2025-12-11T21:43:47.727-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (2:VARCHAR) <- [1000856999]
+2025-12-11T21:43:47.727-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (3:VARCHAR) <- [carlos.sanchez@example.com]
+2025-12-11T21:43:47.727-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (4:TIMESTAMP) <- [null]
+2025-12-11T21:43:47.729-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (5:VARCHAR) <- [activo]
+2025-12-11T21:43:47.729-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (6:INTEGER) <- [null]
+2025-12-11T21:43:47.729-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (7:VARCHAR) <- [null]
+2025-12-11T21:43:47.729-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (8:VARCHAR) <- [Carlos]
+2025-12-11T21:43:47.729-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (9:VARCHAR) <- [$2a$10$563QKUsEUlTKgdKcc3oQEe8YU8dexZFTXjQb6g3.SUsl2fVKKOHP.]
+2025-12-11T21:43:47.729-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (10:VARCHAR) <- [3001112233]
+2025-12-11T21:43:47.729-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (11:INTEGER) <- [25]
+2025-12-11T21:43:47.745-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+2025-12-11T21:43:47.746-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [1000856966]
+2025-12-11T21:43:47.889-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        r1_0.id,
+        r1_0.guard_name,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        lower(r1_0.name)=?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.guard_name,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        lower(r1_0.name)=?
+2025-12-11T21:43:47.889-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [instructor]
+2025-12-11T21:43:47.892-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        r1_0.model_id,
+        r1_1.id,
+        r1_1.guard_name,
+        r1_1.name 
+    from
+        model_has_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.model_id=?
+Hibernate: 
+    select
+        r1_0.model_id,
+        r1_1.id,
+        r1_1.guard_name,
+        r1_1.name 
+    from
+        model_has_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.model_id=?
+2025-12-11T21:43:47.893-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:INTEGER) <- [14]
+[DataInitializer] Usuario actualizado: cedula=1000856966, role=instructor
+2025-12-11T21:43:47.902-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    update
+        usuarios 
+    set
+        apellido=?,
+        cedula=?,
+        correo=?,
+        email_verified_at=?,
+        estado=?,
+        id_ficha=?,
+        foto_perfil=?,
+        nombre=?,
+        password=?,
+        telefono=? 
+    where
+        id_usuario=?
+Hibernate: 
+    update
+        usuarios 
+    set
+        apellido=?,
+        cedula=?,
+        correo=?,
+        email_verified_at=?,
+        estado=?,
+        id_ficha=?,
+        foto_perfil=?,
+        nombre=?,
+        password=?,
+        telefono=? 
+    where
+        id_usuario=?
+2025-12-11T21:43:47.903-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [Paez]
+2025-12-11T21:43:47.903-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (2:VARCHAR) <- [1000856966]
+2025-12-11T21:43:47.903-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (3:VARCHAR) <- [instructor1@sena.edu.co]
+2025-12-11T21:43:47.903-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (4:TIMESTAMP) <- [null]
+2025-12-11T21:43:47.904-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (5:VARCHAR) <- [Activo]
+2025-12-11T21:43:47.904-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (6:INTEGER) <- [null]
+2025-12-11T21:43:47.904-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (7:VARCHAR) <- [null]
+2025-12-11T21:43:47.904-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (8:VARCHAR) <- [Jose]
+2025-12-11T21:43:47.906-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (9:VARCHAR) <- [$2a$10$jbnJaqz1SZMLVpD6FHSHyOj2YXB4xGYbt/Wzmi9dCjXfzML5gFfzi]
+2025-12-11T21:43:47.906-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (10:VARCHAR) <- [3022160778]
+2025-12-11T21:43:47.906-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (11:INTEGER) <- [14]
+2025-12-11T21:43:47.907-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+2025-12-11T21:43:47.907-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [1000856977]
+2025-12-11T21:43:48.083-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        r1_0.id,
+        r1_0.guard_name,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        lower(r1_0.name)=?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.guard_name,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        lower(r1_0.name)=?
+2025-12-11T21:43:48.085-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [instructor]
+2025-12-11T21:43:48.087-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        r1_0.model_id,
+        r1_1.id,
+        r1_1.guard_name,
+        r1_1.name 
+    from
+        model_has_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.model_id=?
+Hibernate: 
+    select
+        r1_0.model_id,
+        r1_1.id,
+        r1_1.guard_name,
+        r1_1.name 
+    from
+        model_has_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.model_id=?
+2025-12-11T21:43:48.088-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:INTEGER) <- [15]
+[DataInitializer] Usuario actualizado: cedula=1000856977, role=instructor
+2025-12-11T21:43:48.095-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    update
+        usuarios 
+    set
+        apellido=?,
+        cedula=?,
+        correo=?,
+        email_verified_at=?,
+        estado=?,
+        id_ficha=?,
+        foto_perfil=?,
+        nombre=?,
+        password=?,
+        telefono=? 
+    where
+        id_usuario=?
+Hibernate: 
+    update
+        usuarios 
+    set
+        apellido=?,
+        cedula=?,
+        correo=?,
+        email_verified_at=?,
+        estado=?,
+        id_ficha=?,
+        foto_perfil=?,
+        nombre=?,
+        password=?,
+        telefono=? 
+    where
+        id_usuario=?
+2025-12-11T21:43:48.095-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [Diaz]
+2025-12-11T21:43:48.095-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (2:VARCHAR) <- [1000856977]
+2025-12-11T21:43:48.095-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (3:VARCHAR) <- [instructor2@sena.edu.co]
+2025-12-11T21:43:48.095-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (4:TIMESTAMP) <- [null]
+2025-12-11T21:43:48.095-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (5:VARCHAR) <- [Activo]
+2025-12-11T21:43:48.095-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (6:INTEGER) <- [null]
+2025-12-11T21:43:48.095-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (7:VARCHAR) <- [null]
+2025-12-11T21:43:48.095-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (8:VARCHAR) <- [Daniel]
+2025-12-11T21:43:48.095-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (9:VARCHAR) <- [$2a$10$YNl8qrBpjZ5UhD2wUllFaOmsUdVZp1HMkxjDj20mFFHHMWZwBDhvC]
+2025-12-11T21:43:48.095-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (10:VARCHAR) <- [3025643876]
+2025-12-11T21:43:48.095-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (11:INTEGER) <- [15]
+2025-12-11T21:43:48.097-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+2025-12-11T21:43:48.099-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [1000856988]
+2025-12-11T21:43:48.250-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        r1_0.id,
+        r1_0.guard_name,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        lower(r1_0.name)=?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.guard_name,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        lower(r1_0.name)=?
+2025-12-11T21:43:48.250-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [coordinador]
+2025-12-11T21:43:48.253-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        r1_0.model_id,
+        r1_1.id,
+        r1_1.guard_name,
+        r1_1.name 
+    from
+        model_has_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.model_id=?
+Hibernate: 
+    select
+        r1_0.model_id,
+        r1_1.id,
+        r1_1.guard_name,
+        r1_1.name 
+    from
+        model_has_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.model_id=?
+2025-12-11T21:43:48.253-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:INTEGER) <- [22]
+[DataInitializer] Usuario actualizado: cedula=1000856988, role=coordinador
+2025-12-11T21:43:48.260-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    update
+        usuarios 
+    set
+        apellido=?,
+        cedula=?,
+        correo=?,
+        email_verified_at=?,
+        estado=?,
+        id_ficha=?,
+        foto_perfil=?,
+        nombre=?,
+        password=?,
+        telefono=? 
+    where
+        id_usuario=?
+Hibernate: 
+    update
+        usuarios 
+    set
+        apellido=?,
+        cedula=?,
+        correo=?,
+        email_verified_at=?,
+        estado=?,
+        id_ficha=?,
+        foto_perfil=?,
+        nombre=?,
+        password=?,
+        telefono=? 
+    where
+        id_usuario=?
+2025-12-11T21:43:48.260-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [MartÃ­nez]
+2025-12-11T21:43:48.260-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (2:VARCHAR) <- [1000856988]
+2025-12-11T21:43:48.260-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (3:VARCHAR) <- [coordinador@sena.edu.co]
+2025-12-11T21:43:48.262-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (4:TIMESTAMP) <- [null]
+2025-12-11T21:43:48.262-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (5:VARCHAR) <- [Activo]
+2025-12-11T21:43:48.262-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (6:INTEGER) <- [null]
+2025-12-11T21:43:48.262-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (7:VARCHAR) <- [null]
+2025-12-11T21:43:48.262-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (8:VARCHAR) <- [Laura]
+2025-12-11T21:43:48.262-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (9:VARCHAR) <- [$2a$10$smGxmsCY9F8Dhn5fkE2QPusUsP80lwH3p09uEwHUgXlcWHbLiI/Qu]
+2025-12-11T21:43:48.262-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (10:VARCHAR) <- [3009876543]
+2025-12-11T21:43:48.262-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (11:INTEGER) <- [22]
+2025-12-11T21:43:48.264-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+2025-12-11T21:43:48.265-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [1000856944]
+2025-12-11T21:43:48.269-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        f1_0.id_ficha,
+        f1_0.estado,
+        f1_0.fecha,
+        j1_0.id_jornada,
+        j1_0.hora_fin,
+        j1_0.hora_inicio,
+        j1_0.nombre_jornada,
+        f1_0.numeroficha,
+        p1_0.id_programa,
+        c1_0.id_coordinacion,
+        c1_0.descripcion,
+        c1_0.nombreCoordinacion,
+        p1_0.nombre_programa,
+        p1_0.tipo_programa 
+    from
+        ficha f1_0 
+    left join
+        jornada j1_0 
+            on j1_0.id_jornada=f1_0.id_jornada 
+    left join
+        programa p1_0 
+            on p1_0.id_programa=f1_0.id_programa 
+    left join
+        coordinacion c1_0 
+            on c1_0.id_coordinacion=p1_0.id_coordinacion 
+    where
+        f1_0.id_ficha=?
+Hibernate: 
+    select
+        f1_0.id_ficha,
+        f1_0.estado,
+        f1_0.fecha,
+        j1_0.id_jornada,
+        j1_0.hora_fin,
+        j1_0.hora_inicio,
+        j1_0.nombre_jornada,
+        f1_0.numeroficha,
+        p1_0.id_programa,
+        c1_0.id_coordinacion,
+        c1_0.descripcion,
+        c1_0.nombreCoordinacion,
+        p1_0.nombre_programa,
+        p1_0.tipo_programa 
+    from
+        ficha f1_0 
+    left join
+        jornada j1_0 
+            on j1_0.id_jornada=f1_0.id_jornada 
+    left join
+        programa p1_0 
+            on p1_0.id_programa=f1_0.id_programa 
+    left join
+        coordinacion c1_0 
+            on c1_0.id_coordinacion=p1_0.id_coordinacion 
+    where
+        f1_0.id_ficha=?
+2025-12-11T21:43:48.271-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:INTEGER) <- [1]
+2025-12-11T21:43:48.426-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        r1_0.id,
+        r1_0.guard_name,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        lower(r1_0.name)=?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.guard_name,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        lower(r1_0.name)=?
+2025-12-11T21:43:48.427-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [aprendiz]
+2025-12-11T21:43:48.429-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        r1_0.model_id,
+        r1_1.id,
+        r1_1.guard_name,
+        r1_1.name 
+    from
+        model_has_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.model_id=?
+Hibernate: 
+    select
+        r1_0.model_id,
+        r1_1.id,
+        r1_1.guard_name,
+        r1_1.name 
+    from
+        model_has_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.model_id=?
+2025-12-11T21:43:48.431-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:INTEGER) <- [1]
+[DataInitializer] Usuario actualizado: cedula=1000856944, role=aprendiz
+2025-12-11T21:43:48.440-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    update
+        usuarios 
+    set
+        apellido=?,
+        cedula=?,
+        correo=?,
+        email_verified_at=?,
+        estado=?,
+        id_ficha=?,
+        foto_perfil=?,
+        nombre=?,
+        password=?,
+        telefono=? 
+    where
+        id_usuario=?
+Hibernate: 
+    update
+        usuarios 
+    set
+        apellido=?,
+        cedula=?,
+        correo=?,
+        email_verified_at=?,
+        estado=?,
+        id_ficha=?,
+        foto_perfil=?,
+        nombre=?,
+        password=?,
+        telefono=? 
+    where
+        id_usuario=?
+2025-12-11T21:43:48.442-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [PÃ©rez]
+2025-12-11T21:43:48.442-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (2:VARCHAR) <- [1000856944]
+2025-12-11T21:43:48.442-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (3:VARCHAR) <- [aprendiz1@sena.edu.co]
+2025-12-11T21:43:48.442-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (4:TIMESTAMP) <- [null]
+2025-12-11T21:43:48.443-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (5:VARCHAR) <- [Activo]
+2025-12-11T21:43:48.443-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (6:INTEGER) <- [1]
+2025-12-11T21:43:48.443-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (7:VARCHAR) <- [null]
+2025-12-11T21:43:48.443-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (8:VARCHAR) <- [Juancho]
+2025-12-11T21:43:48.443-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (9:VARCHAR) <- [$2a$10$2Ik3FFwwIQYVIupyw7tKy.15dDDEp.FcE7my0lnQzXj1uX56/fuRe]
+2025-12-11T21:43:48.443-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (10:VARCHAR) <- [3022160778]
+2025-12-11T21:43:48.443-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (11:INTEGER) <- [1]
+2025-12-11T21:43:48.444-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+2025-12-11T21:43:48.445-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [1000856943]
+[DataInitializer] Usuario con cédula 1000856943 no encontrado en la base de datos.
+2025-12-11T21:43:48.451-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+2025-12-11T21:43:48.452-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [1000856942]
+2025-12-11T21:43:48.454-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        f1_0.id_ficha,
+        f1_0.estado,
+        f1_0.fecha,
+        j1_0.id_jornada,
+        j1_0.hora_fin,
+        j1_0.hora_inicio,
+        j1_0.nombre_jornada,
+        f1_0.numeroficha,
+        p1_0.id_programa,
+        c1_0.id_coordinacion,
+        c1_0.descripcion,
+        c1_0.nombreCoordinacion,
+        p1_0.nombre_programa,
+        p1_0.tipo_programa 
+    from
+        ficha f1_0 
+    left join
+        jornada j1_0 
+            on j1_0.id_jornada=f1_0.id_jornada 
+    left join
+        programa p1_0 
+            on p1_0.id_programa=f1_0.id_programa 
+    left join
+        coordinacion c1_0 
+            on c1_0.id_coordinacion=p1_0.id_coordinacion 
+    where
+        f1_0.id_ficha=?
+Hibernate: 
+    select
+        f1_0.id_ficha,
+        f1_0.estado,
+        f1_0.fecha,
+        j1_0.id_jornada,
+        j1_0.hora_fin,
+        j1_0.hora_inicio,
+        j1_0.nombre_jornada,
+        f1_0.numeroficha,
+        p1_0.id_programa,
+        c1_0.id_coordinacion,
+        c1_0.descripcion,
+        c1_0.nombreCoordinacion,
+        p1_0.nombre_programa,
+        p1_0.tipo_programa 
+    from
+        ficha f1_0 
+    left join
+        jornada j1_0 
+            on j1_0.id_jornada=f1_0.id_jornada 
+    left join
+        programa p1_0 
+            on p1_0.id_programa=f1_0.id_programa 
+    left join
+        coordinacion c1_0 
+            on c1_0.id_coordinacion=p1_0.id_coordinacion 
+    where
+        f1_0.id_ficha=?
+2025-12-11T21:43:48.456-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:INTEGER) <- [13]
+2025-12-11T21:43:48.609-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        r1_0.id,
+        r1_0.guard_name,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        lower(r1_0.name)=?
+Hibernate: 
+    select
+        r1_0.id,
+        r1_0.guard_name,
+        r1_0.name 
+    from
+        roles r1_0 
+    where
+        lower(r1_0.name)=?
+2025-12-11T21:43:48.610-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [aprendiz]
+2025-12-11T21:43:48.612-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        r1_0.model_id,
+        r1_1.id,
+        r1_1.guard_name,
+        r1_1.name 
+    from
+        model_has_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.model_id=?
+Hibernate: 
+    select
+        r1_0.model_id,
+        r1_1.id,
+        r1_1.guard_name,
+        r1_1.name 
+    from
+        model_has_roles r1_0 
+    join
+        roles r1_1 
+            on r1_1.id=r1_0.role_id 
+    where
+        r1_0.model_id=?
+2025-12-11T21:43:48.612-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:INTEGER) <- [24]
+[DataInitializer] Usuario actualizado: cedula=1000856942, role=aprendiz
+2025-12-11T21:43:48.620-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    update
+        usuarios 
+    set
+        apellido=?,
+        cedula=?,
+        correo=?,
+        email_verified_at=?,
+        estado=?,
+        id_ficha=?,
+        foto_perfil=?,
+        nombre=?,
+        password=?,
+        telefono=? 
+    where
+        id_usuario=?
+Hibernate: 
+    update
+        usuarios 
+    set
+        apellido=?,
+        cedula=?,
+        correo=?,
+        email_verified_at=?,
+        estado=?,
+        id_ficha=?,
+        foto_perfil=?,
+        nombre=?,
+        password=?,
+        telefono=? 
+    where
+        id_usuario=?
+2025-12-11T21:43:48.620-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [Castro]
+2025-12-11T21:43:48.620-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (2:VARCHAR) <- [1000856942]
+2025-12-11T21:43:48.620-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (3:VARCHAR) <- [vacalolca@gmail.com]
+2025-12-11T21:43:48.620-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (4:TIMESTAMP) <- [null]
+2025-12-11T21:43:48.620-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (5:VARCHAR) <- [Activo]
+2025-12-11T21:43:48.622-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (6:INTEGER) <- [13]
+2025-12-11T21:43:48.622-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (7:VARCHAR) <- [null]
+2025-12-11T21:43:48.622-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (8:VARCHAR) <- [Luisa]
+2025-12-11T21:43:48.622-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (9:VARCHAR) <- [$2a$10$qVxXkZJBqQcuDLhsgH4I0eX8cVyU0QjYzVk.ayl.glkR05rDe/YtC]
+2025-12-11T21:43:48.622-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (10:VARCHAR) <- [3022160778]
+2025-12-11T21:43:48.622-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (11:INTEGER) <- [24]
+2025-12-11T21:43:48.623-05:00 DEBUG 13432 --- [           main] org.hibernate.SQL                        : 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+Hibernate: 
+    select
+        u1_0.id_usuario,
+        u1_0.apellido,
+        u1_0.cedula,
+        u1_0.correo,
+        u1_0.email_verified_at,
+        u1_0.estado,
+        u1_0.id_ficha,
+        u1_0.foto_perfil,
+        u1_0.nombre,
+        u1_0.password,
+        u1_0.telefono 
+    from
+        usuarios u1_0 
+    where
+        u1_0.cedula=?
+2025-12-11T21:43:48.624-05:00 TRACE 13432 --- [           main] org.hibernate.orm.jdbc.bind              : binding parameter (1:VARCHAR) <- [1000856993]
+[DataInitializer] Usuario con cédula 1000856993 no encontrado en la base de datos.
+[DataInitializer] Proceso finalizado.
